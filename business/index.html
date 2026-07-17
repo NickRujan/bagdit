@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bagdit for businesses — turn empty tables into customer videos</title>
+<meta name="description" content="Trade spare capacity — empty rooms, open tables, idle boats — for rights-cleared customer videos. Approve before you pay, ~$55 per video. Free posting in the launch city.">
+
+<!-- TODO: after deploy, replace bagdit.vercel.app with your real domain in all three pages -->
+<meta property="og:title" content="Bagdit — turn empty tables into customer videos">
+<meta property="og:description" content="Pay with spare capacity. Approve before you pay. About $55 per rights-cleared video vs $150+ at an agency.">
+<meta property="og:image" content="https://bagdit.vercel.app/og/og-business.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="logo" href="/" aria-label="Bagdit home"><img src="/brand/bagdit-lockup.svg" alt="Bagdit" width="88" height="29"></a>
+    <div class="nav-links">
+      <a href="/creators/">For creators</a>
+      <a href="/business/">For businesses</a>
+    </div>
+    <a class="btn btn-sm btn-navy" href="#join">Get free access</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kick">For hotels, restaurants &amp; local experiences</p>
+    <h1>Turn empty tables into <span class="hl">customer videos</span>.</h1>
+    <p class="sub">Your spare capacity — an unsold room, an open table, an idle boat — is worth real marketing. Bagdit trades it for <b>rights-cleared videos shot by real customers</b> in your actual space. <b>You only pay for videos you approve.</b></p>
+
+    <form class="waitlist" data-waitlist="business" data-msg="msg-hero" novalidate>
+      <label class="sr" for="bn1">Business name</label>
+      <input id="bn1" type="text" name="business" required placeholder="Business name" autocomplete="organization">
+      <label class="sr" for="be1">Email address</label>
+      <input id="be1" type="email" name="email" required placeholder="owner@business.com" autocomplete="email" inputmode="email">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+      <button class="btn btn-navy" type="submit">Get free launch-city access</button>
+    </form>
+    <p class="form-msg" id="msg-hero" role="status" aria-live="polite"></p>
+    <p class="fine">FREE OFFER POSTING FOR LAUNCH-CITY BUSINESSES · NO CONTRACT, NO CARD</p>
+  </div>
+</header>
+
+<section style="padding-top:30px">
+  <div class="wrap">
+    <p class="kick">How it works</p>
+    <h2>Zero-risk by design</h2>
+    <div class="grid3 steps">
+      <div class="card step reveal">
+        <span class="n">1</span>
+        <b>Post an offer</b>
+        <p>"Free dinner for two + $40 for a 30-second video." You set the perk, the cash, the brief, and how many spots.</p>
+      </div>
+      <div class="card step reveal d1">
+        <span class="n">2</span>
+        <b>Creators visit &amp; pay full price</b>
+        <p>They come in like normal customers, enjoy, and film to your brief. Your staff does nothing different.</p>
+      </div>
+      <div class="card step reveal d2">
+        <span class="n">3</span>
+        <b>Approve only what you like</b>
+        <p>Approval triggers the refund + bonus automatically. Rejected submissions cost $0. Every approved video is yours to use anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap grid2" style="align-items:center">
+    <div>
+      <p class="kick">The math</p>
+      <h2>Cheaper than any agency</h2>
+      <p class="sub">A UGC agency charges <b>$150–200 per video</b> from someone who's never set foot in your business. A local photographer runs $300+ per shoot.</p>
+      <p class="sub">On Bagdit you pay mostly in <b>spare capacity</b> — food cost on a comped meal, a room that was sitting empty anyway — plus a small cash bonus. And the creator's table usually brings full-paying friends.</p>
+    </div>
+    <div class="card receipt reveal" aria-label="Example monthly cost for a restaurant">
+      <h3>A restaurant's month</h3>
+      <div class="line"><span>Posting offers (launch city)</span><span>$0</span></div>
+      <div class="line"><span>Food cost on 4 comped meals</span><span>$60</span></div>
+      <div class="line"><span>Cash bonuses, 4 × $40</span><span>$160</span></div>
+      <div class="total"><span>Per rights-cleared video</span><span>~$55</span></div>
+      <p class="note">Rejected videos: $0. Contracts, payouts, and #ad disclosure handled by Bagdit.</p>
+    </div>
+  </div>
+</section>
+
+<section id="join" style="padding-top:0">
+  <div class="wrap">
+    <div class="band reveal">
+      <img class="tagmark" src="/brand/bagdit-mark.svg" alt="" aria-hidden="true">
+      <p class="kick">Launch city — limited spots</p>
+      <h2>First businesses in post free</h2>
+      <p class="sub">We're onboarding a small founding group in our first city: free posting, hands-on setup, and first pick of the local creator pool.</p>
+      <form class="waitlist" data-waitlist="business" data-msg="msg-join" novalidate>
+        <label class="sr" for="bn2">Business name</label>
+        <input id="bn2" type="text" name="business" required placeholder="Business name" autocomplete="organization">
+        <label class="sr" for="be2">Email address</label>
+        <input id="be2" type="email" name="email" required placeholder="owner@business.com" autocomplete="email" inputmode="email">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+        <button class="btn" type="submit">Claim a founding spot</button>
+      </form>
+      <p class="form-msg" id="msg-join" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Bagdit · Creator content carries #ad disclosure — built into the flow</span>
+    <span class="foot-links">
+      <a href="/creators/">Make videos instead?</a>
+      <a href="mailto:hello@bagdit.com">hello@bagdit.com</a>
+    </span>
+  </div>
+</footer>
+
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

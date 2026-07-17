@@ -1,0 +1,19 @@
+# --- secrets: never commit environment files ---
+.env
+.env.*
+!.env.example
+
+# --- dependencies & build output (Next.js, added in Step 1) ---
+node_modules/
+.next/
+out/
+build/
+
+# --- deployment tooling ---
+.vercel/
+
+# --- OS / editor junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

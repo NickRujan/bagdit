@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bagdit for creators — hotel nights, boat days &amp; dinners, free</title>
+<meta name="description" content="Local hotels, restaurants, and experiences trade free stays, meals, boat days, and cash for 30–60 second videos. No followers needed. Join the creator waitlist.">
+
+<!-- TODO: after deploy, replace bagdit.vercel.app with your real domain in all three pages -->
+<meta property="og:title" content="Bagdit — your camera pays for the weekend">
+<meta property="og:description" content="Hotel nights, boat days, dinners out — free + cash bonuses, in exchange for a short video. No followers needed.">
+<meta property="og:image" content="https://bagdit.vercel.app/og/og-creators.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="theme-dark">
+
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="logo" href="/" aria-label="Bagdit home"><img src="/brand/bagdit-lockup-white.svg" alt="Bagdit" width="88" height="29"></a>
+    <div class="nav-links">
+      <a href="/creators/">For creators</a>
+      <a href="/business/">For businesses</a>
+    </div>
+    <a class="btn btn-sm" href="#join">Join the waitlist</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kick">For creators · launching city by city</p>
+    <h1>Hotel nights. Boat days.<br>Dinners out. <span class="hl">Free.</span></h1>
+    <p class="sub">Local hotels, restaurants &amp; experiences trade <b>real stuff + cash</b> for a 30–60 second video of you living it. Film your visit, they approve, <b>you don't pay</b>.</p>
+
+    <form class="waitlist inline" data-waitlist="creator" data-msg="msg-hero" novalidate>
+      <label class="sr" for="ce1">Email address</label>
+      <input id="ce1" type="email" name="email" required placeholder="you@email.com" autocomplete="email" inputmode="email">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+      <button class="btn" type="submit">Get early access</button>
+    </form>
+    <p class="form-msg" id="msg-hero" role="status" aria-live="polite"></p>
+    <p class="fine">FREE TO JOIN · WAITLIST GETS FIRST PICK OF OFFERS</p>
+
+    <div class="offers" aria-label="Example offers">
+      <div class="card offer reveal">
+        <div class="offer-top"><span class="chip">Stay</span><span class="spots">2 of 5 spots left</span></div>
+        <h3>Boutique hotel — one weekend night</h3>
+        <p class="meta">DOWNTOWN · 2.1 MI</p>
+        <p class="deal"><s>$219</s> → <span class="zero">$0</span> + $100 cash</p>
+        <span class="brief">45s room &amp; rooftop tour</span>
+      </div>
+      <div class="card offer reveal d1">
+        <div class="offer-top"><span class="chip">Water</span><span class="spots">Ends Sunday</span></div>
+        <h3>Sunset boat cruise for two</h3>
+        <p class="meta">MARINA · 4.6 MI</p>
+        <p class="deal"><s>$140</s> → <span class="zero">$0</span> + $50 cash</p>
+        <span class="brief">30s reel on the water</span>
+      </div>
+      <div class="card offer reveal d2">
+        <div class="offer-top"><span class="chip">Food</span><span class="spots">3 spots left</span></div>
+        <h3>Omakase dinner for two</h3>
+        <p class="meta">ARTS DISTRICT · 1.2 MI</p>
+        <p class="deal"><s>$160</s> → <span class="zero">$0</span> + $60 cash</p>
+        <span class="brief">30s reel, tag the chef</span>
+      </div>
+      <div class="card offer reveal d3">
+        <div class="offer-top"><span class="chip">Ride</span><span class="spots">Footage only</span></div>
+        <h3>Jet ski — one hour</h3>
+        <p class="meta">LAKESIDE · 5.4 MI</p>
+        <p class="deal"><s>$95</s> → <span class="zero">$0</span></p>
+        <span class="brief">Raw clips — no posting needed</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="kick">How it works</p>
+    <h2>Three steps. That's it.</h2>
+    <div class="grid3 steps">
+      <div class="card step reveal">
+        <span class="n">1</span>
+        <b>Pick an offer near you</b>
+        <p>Stays, meals, rides — the feed shows what's up for grabs today and how many spots are left.</p>
+      </div>
+      <div class="card step reveal d1">
+        <span class="n">2</span>
+        <b>Go live it &amp; film</b>
+        <p>Pay like a normal customer, enjoy, and shoot 30–60 seconds to a short, clear brief.</p>
+      </div>
+      <div class="card step reveal d2">
+        <span class="n">3</span>
+        <b>Approved = free</b>
+        <p>Instant refund plus cash bonus, straight to your wallet. Receipt says $0.00.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <p class="kick">Why it's fair</p>
+    <h2>Built so you can't get burned</h2>
+    <ul class="checks reveal">
+      <li><span class="tick">✓</span><span>Cash sits in escrow <em>before</em> you film — no ghosting, ever</span></li>
+      <li><span class="tick">✓</span><span>Every offer has a written brief: length, what to show, what to tag</span></li>
+      <li><span class="tick">✓</span><span>Good footage earns. Followers just unlock the bigger perks.</span></li>
+      <li><span class="tick">✓</span><span>Free to join — you keep <em>100%</em> of deal cash</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="join" style="padding-top:0">
+  <div class="wrap">
+    <div class="band reveal">
+      <img class="tagmark" src="/brand/bagdit-mark.svg" alt="" aria-hidden="true">
+      <p class="kick">The waitlist</p>
+      <h2>Your city is next</h2>
+      <p class="sub">We open city by city. Waitlist members get first pick of offers the day their city goes live.</p>
+      <form class="waitlist inline" data-waitlist="creator" data-msg="msg-join" novalidate>
+        <label class="sr" for="ce2">Email address</label>
+        <input id="ce2" type="email" name="email" required placeholder="you@email.com" autocomplete="email" inputmode="email">
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+        <button class="btn" type="submit">Join the creator waitlist</button>
+      </form>
+      <p class="form-msg" id="msg-join" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Bagdit · #ad disclosure built into every deal</span>
+    <span class="foot-links">
+      <a href="/business/">Own a business?</a>
+      <a href="mailto:hello@bagdit.com">hello@bagdit.com</a>
+    </span>
+  </div>
+</footer>
+
+<script src="/assets/site.js" defer></script>
+</body>
+</html>
