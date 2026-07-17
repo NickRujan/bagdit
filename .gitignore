@@ -12,6 +12,9 @@ build/
 # --- deployment tooling ---
 .vercel/
 
+# --- local dev database + uploads (never commit user data) ---
+.data/
+
 # --- OS / editor junk ---
 .DS_Store
 Thumbs.db
