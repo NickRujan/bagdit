@@ -8,10 +8,16 @@ create table if not exists offers (
   id uuid primary key default gen_random_uuid(),
   business_name text not null,
   neighborhood text not null default '',
+  address text not null default '',
+  lat double precision,
+  lng double precision,
   category text not null check (category in ('food','stay','activity','nightlife')),
   headline text not null,
-  value_desc text not null default '',
-  the_ask text not null default '',
+  retail_value text not null default '',      -- e.g. "$40", shown struck out
+  cash_bonus int not null default 0,          -- dollars on top; 0 = perk only
+  the_ask text not null default '',           -- one-liner on the card
+  brief text not null default '',             -- full brief, auto-emailed on claim
+  photo_url text not null default '',         -- optional real photo
   spots_total int not null default 1,
   spots_remaining int not null default 1,
   deadline date,
@@ -19,14 +25,31 @@ create table if not exists offers (
   created_at timestamptz not null default now()
 );
 
+-- Creator accounts ("wallet"): password is scrypt-hashed by the app.
+create table if not exists creators (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null unique,
+  password_hash text not null,
+  social_handle text not null default '',
+  payout_method text not null default '',
+  payout_handle text not null default '',
+  created_at timestamptz not null default now()
+);
+
+-- One-tap claims: created as 'confirmed', spot taken immediately,
+-- expires_at = claim time + 7 days (spot released if no submission).
 create table if not exists claims (
   id uuid primary key default gen_random_uuid(),
   offer_id uuid not null references offers(id) on delete cascade,
+  creator_id uuid references creators(id) on delete set null,
   name text not null,
   email text not null,
   social_handle text not null default '',
   planned_date date,
-  status text not null default 'pending' check (status in ('pending','confirmed','declined')),
+  status text not null default 'confirmed'
+    check (status in ('pending','confirmed','declined','expired')),
+  expires_at timestamptz,
   created_at timestamptz not null default now()
 );
 
@@ -61,6 +84,7 @@ create table if not exists waitlist (
 -- service_role key (which bypasses RLS). Turning RLS on with no policies
 -- means the public anon key can read/write NOTHING — safest default.
 alter table offers enable row level security;
+alter table creators enable row level security;
 alter table claims enable row level security;
 alter table submissions enable row level security;
 alter table waitlist enable row level security;

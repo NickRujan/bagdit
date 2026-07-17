@@ -1,10 +1,13 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { PAYOUT_METHODS } from "../../lib/config";
 
-export default function SubmitForm({ offers }) {
+export default function SubmitForm({ offers, creator, myClaims, preselect }) {
   const [state, setState] = useState({ status: "idle", msg: "" });
-  const [offerChoice, setOfferChoice] = useState("");
+  const [offerChoice, setOfferChoice] = useState(
+    preselect && myClaims.some((c) => c.id === preselect) ? `claim:${preselect}` : ""
+  );
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -30,24 +33,44 @@ export default function SubmitForm({ offers }) {
   if (state.status === "ok") {
     return (
       <p className="form-msg ok" role="status">
-        Got it — we review within 48 hours. Approved = refund + bonus via your
-        chosen payout method. Watch your email for anything we need.
+        Got it — we review within 48 hours. Approved = refund + bonus to your
+        wallet. Watch your email for anything we need.
       </p>
     );
   }
 
   return (
     <form className="form" onSubmit={onSubmit}>
+      {creator ? (
+        <>
+          <p className="notice" style={{ marginTop: 0 }}>
+            Submitting as <b>{creator.name}</b> · payout to <b>{creator.payout_method} {creator.payout_handle}</b>{" "}
+            (<Link href="/account">change</Link>)
+          </p>
+          <input type="hidden" name="name" value={creator.name} />
+          <input type="hidden" name="email" value={creator.email} />
+          <input type="hidden" name="payout_method" value={creator.payout_method} />
+          <input type="hidden" name="payout_handle" value={creator.payout_handle} />
+        </>
+      ) : (
+        <>
+          <p className="notice" style={{ marginTop: 0 }}>
+            Have an account? <Link href="/join?next=/submit"><b>Sign in</b></Link> and we'll fill
+            most of this for you.
+          </p>
+          <div className="field">
+            <label htmlFor="sf-name">Your name</label>
+            <input id="sf-name" name="name" required autoComplete="name" />
+          </div>
+          <div className="field">
+            <label htmlFor="sf-email">Email <span className="hint">(same one you claimed with)</span></label>
+            <input id="sf-email" name="email" type="email" required autoComplete="email" inputMode="email" />
+          </div>
+        </>
+      )}
+
       <div className="field">
-        <label htmlFor="sf-name">Your name</label>
-        <input id="sf-name" name="name" required autoComplete="name" />
-      </div>
-      <div className="field">
-        <label htmlFor="sf-email">Email <span className="hint">(same one you claimed with)</span></label>
-        <input id="sf-email" name="email" type="email" required autoComplete="email" inputMode="email" />
-      </div>
-      <div className="field">
-        <label htmlFor="sf-offer">Which offer?</label>
+        <label htmlFor="sf-offer">Which deal is this for?</label>
         <select
           id="sf-offer"
           name="offer_pick"
@@ -55,12 +78,18 @@ export default function SubmitForm({ offers }) {
           value={offerChoice}
           onChange={(e) => setOfferChoice(e.target.value)}
         >
-          <option value="" disabled>Choose the offer…</option>
-          {offers.map((o) => (
-            <option key={o.id} value={`${o.business_name} — ${o.headline}`}>
-              {o.business_name} — {o.headline}
-            </option>
-          ))}
+          <option value="" disabled>Choose…</option>
+          {myClaims.length > 0 && (
+            <optgroup label="Your active claims">
+              {myClaims.map((c) => (
+                <option key={c.id} value={`claim:${c.id}`}>{c.label}</option>
+              ))}
+            </optgroup>
+          )}
+          {myClaims.length === 0 &&
+            offers.map((o) => (
+              <option key={o.id} value={o.label}>{o.label}</option>
+            ))}
           <option value="__other__">Something else / not listed</option>
         </select>
       </div>
@@ -84,19 +113,24 @@ export default function SubmitForm({ offers }) {
         <label htmlFor="sf-total">Receipt total</label>
         <input id="sf-total" name="receipt_total" required placeholder="$38.40" inputMode="decimal" />
       </div>
-      <div className="field">
-        <label htmlFor="sf-method">Payout method</label>
-        <select id="sf-method" name="payout_method" required defaultValue="">
-          <option value="" disabled>Choose…</option>
-          {PAYOUT_METHODS.map((m) => (
-            <option key={m} value={m}>{m}</option>
-          ))}
-        </select>
-      </div>
-      <div className="field">
-        <label htmlFor="sf-handle">Payout handle</label>
-        <input id="sf-handle" name="payout_handle" required placeholder="@you, email, or phone — whatever that app uses" />
-      </div>
+
+      {!creator && (
+        <>
+          <div className="field">
+            <label htmlFor="sf-method">Payout method</label>
+            <select id="sf-method" name="payout_method" required defaultValue="">
+              <option value="" disabled>Choose…</option>
+              {PAYOUT_METHODS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="sf-handle">Payout handle</label>
+            <input id="sf-handle" name="payout_handle" required placeholder="@you, email, or phone — whatever that app uses" />
+          </div>
+        </>
+      )}
       <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ display: "none" }} />
       <button className="btn" type="submit" disabled={state.status === "busy"}>
         {state.status === "busy" ? "Uploading…" : "Submit for review"}

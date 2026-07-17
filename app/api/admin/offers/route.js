@@ -10,8 +10,14 @@ function cleanOffer(body, { partial = false } = {}) {
   str("business_name", 160);
   str("neighborhood", 120);
   str("headline", 200);
-  str("value_desc", 240);
   str("the_ask", 500);
+  str("brief", 4000);
+  str("address", 240);
+  str("retail_value", 40);
+  str("photo_url", 500);
+  if (body.cash_bonus !== undefined) out.cash_bonus = Math.max(0, parseInt(body.cash_bonus) || 0);
+  if (body.lat !== undefined) out.lat = body.lat === "" || body.lat === null ? null : parseFloat(body.lat);
+  if (body.lng !== undefined) out.lng = body.lng === "" || body.lng === null ? null : parseFloat(body.lng);
   if (body.category !== undefined) {
     if (!CATEGORIES.some((c) => c.key === body.category)) throw new Error("bad category");
     out.category = body.category;
@@ -31,8 +37,14 @@ function cleanOffer(body, { partial = false } = {}) {
     out.spots_remaining = out.spots_remaining ?? out.spots_total;
     out.status = out.status ?? "open";
     out.neighborhood = out.neighborhood ?? "";
-    out.value_desc = out.value_desc ?? "";
     out.the_ask = out.the_ask ?? "";
+    out.brief = out.brief ?? "";
+    out.address = out.address ?? "";
+    out.retail_value = out.retail_value ?? "";
+    out.cash_bonus = out.cash_bonus ?? 0;
+    out.photo_url = out.photo_url ?? "";
+    out.lat = out.lat ?? null;
+    out.lng = out.lng ?? null;
   }
   return out;
 }

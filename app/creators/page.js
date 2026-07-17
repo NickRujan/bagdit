@@ -55,7 +55,7 @@ export default function Creators() {
             <div className="card step reveal">
               <span className="n">1</span>
               <b>Claim an offer</b>
-              <p>Pick from the live board. We confirm within 24h with your shoot brief.</p>
+              <p>One tap on the live board — the shoot brief hits your inbox instantly. You get 7 days.</p>
             </div>
             <div className="card step reveal d1">
               <span className="n">2</span>

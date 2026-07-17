@@ -19,33 +19,20 @@ claim comes in → you CONFIRM + send brief (email A)
 
 ## When a CLAIM comes in (you get an email)
 
-1. Open /admin → **Claims** tab.
-2. Sanity check: real-looking name/email? Offer still has spots?
-3. Tap **Confirm (takes a spot)** — this decrements the offer's counter —
-   then send **email A** below. Or **Decline** (send a short kind note).
+**Claims are now automatic**: creators have accounts, claiming is one tap,
+the spot is taken instantly, and the offer's **brief is auto-emailed** to
+them (that's why every offer needs its brief filled in — /admin warns
+"⚠ no brief yet" on offers missing one). The claim holds for **7 days**,
+then the spot auto-releases if nothing is submitted.
 
-> Don't let claims sit: confirm or decline **within 24h** — that's the
-> promise on the site.
+Your job on each claim notification:
 
-### Email A — claim confirmed + shoot brief
-
-> **Subject: You're confirmed — [Offer] at [Business] 🎉**
->
-> Hey [Name],
->
-> You're confirmed for **[offer headline]** at **[Business]**. Here's how it works:
->
-> 1. Go anytime before **[deadline]**. Pay like a normal customer and **keep your receipt**.
-> 2. Film a **[30–60]s vertical video**. Your shot list:
->    - [paste the offer's "ask" + anything the business added]
->    - Good light, steady hands, copyright-safe audio only.
-> 3. Submit at **bagdit.app/submit** — receipt photo, video link, and how you want to be paid.
->
-> Approved videos get your receipt refunded (up to [cap]) **plus $[bonus]** within 48h of approval.
-> If the business rejects, you'll get the reason — you keep your footage either way.
->
-> Questions? Just reply.
-> — Nick @ Bagdit
+1. Skim it — name, payout on file, spots left.
+2. Only act if something smells off (spam-looking account, a business
+   asked you to pause) → /admin → Claims → **Decline** (gives the spot
+   back automatically).
+3. For booking-required offers (boat, motel) watch for the creator's
+   reply to schedule.
 
 ---
 

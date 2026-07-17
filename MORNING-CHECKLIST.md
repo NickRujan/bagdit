@@ -46,6 +46,7 @@ The live bagdit.app is untouched. These are the only steps that needed
    | `ADMIN_PASSWORD` | a long password you'll type on your phone |
    | `RESEND_API_KEY` | the `re_...` key |
    | `NOTIFY_EMAIL` | hello@bagdit.app |
+   | `SESSION_SECRET` | any long random string (creator login sessions) |
 
 2. **Settings → Build and Deployment → Framework Preset** → change
    "Other" → **Next.js** → Save. (The repo is a Next.js app now.)

@@ -17,8 +17,9 @@ function fmt(ts) {
 }
 
 const EMPTY_OFFER = {
-  business_name: "", neighborhood: "", category: "food", headline: "",
-  value_desc: "", the_ask: "", spots_total: 3, deadline: "",
+  business_name: "", neighborhood: "", address: "", lat: "", lng: "",
+  category: "food", headline: "", retail_value: "", cash_bonus: 0,
+  the_ask: "", brief: "", photo_url: "", spots_total: 3, deadline: "",
 };
 
 function OfferEditor({ initial, onDone, onCancel }) {
@@ -54,8 +55,18 @@ function OfferEditor({ initial, onDone, onCancel }) {
           </select>
         </div>
       </div>
-      <div className="field"><label>Value line</label><input value={f.value_desc} onChange={set("value_desc")} placeholder="Dinner for two ~$40 → $0 + $25 cash" /></div>
-      <div className="field"><label>The ask (shoot brief summary)</label><textarea value={f.the_ask} onChange={set("the_ask")} /></div>
+      <div className="grid2" style={{ gap: 12 }}>
+        <div className="field"><label>Normal price (shown struck out)</label><input value={f.retail_value || ""} onChange={set("retail_value")} placeholder="$40" /></div>
+        <div className="field"><label>Cash bonus ($, 0 = none)</label><input type="number" min="0" value={f.cash_bonus ?? 0} onChange={set("cash_bonus")} /></div>
+      </div>
+      <div className="field"><label>The ask (one-line summary on the card)</label><textarea value={f.the_ask} onChange={set("the_ask")} style={{ minHeight: 60 }} /></div>
+      <div className="field"><label>Full shoot brief (auto-emailed on claim)</label><textarea value={f.brief || ""} onChange={set("brief")} placeholder="Shot list, timing tips, tags, rules…" /></div>
+      <div className="field"><label>Street address</label><input value={f.address || ""} onChange={set("address")} placeholder="912 Water St, Bay City, MI" /></div>
+      <div className="grid2" style={{ gap: 12 }}>
+        <div className="field"><label>Latitude <span className="hint">(right-click the spot in Google Maps to copy)</span></label><input value={f.lat ?? ""} onChange={set("lat")} placeholder="43.5962" /></div>
+        <div className="field"><label>Longitude</label><input value={f.lng ?? ""} onChange={set("lng")} placeholder="-83.8873" /></div>
+      </div>
+      <div className="field"><label>Photo URL <span className="hint">(optional — real photo beats the placeholder art)</span></label><input value={f.photo_url || ""} onChange={set("photo_url")} placeholder="https://…" /></div>
       <div className="grid2" style={{ gap: 12 }}>
         <div className="field"><label>Total spots</label><input type="number" min="1" value={f.spots_total} onChange={set("spots_total")} /></div>
         <div className="field"><label>Deadline</label><input type="date" value={f.deadline || ""} onChange={set("deadline")} /></div>
@@ -159,7 +170,7 @@ export default function Admin() {
                         <Pill s={c.status} />
                       </div>
                       <span className="kv"><b>{o ? `${o.business_name} — ${o.headline}` : "(offer deleted)"}</b></span>
-                      <span className="kv">{c.email} · planned {c.planned_date || "—"} · claimed {fmt(c.created_at)}</span>
+                      <span className="kv">{c.email} · claimed {fmt(c.created_at)}{c.expires_at ? ` · expires ${fmt(c.expires_at)}` : ""}</span>
                       {o && <span className="kv">{o.spots_remaining}/{o.spots_total} spots left on this offer</span>}
                       <div className="rowactions">
                         {c.status !== "confirmed" && (
@@ -236,7 +247,7 @@ export default function Admin() {
                       <Pill s={o.status} />
                     </div>
                     <span className="kv">{o.neighborhood} · {o.category} · {o.spots_remaining}/{o.spots_total} spots · {o.deadline ? `through ${o.deadline}` : "no deadline"}</span>
-                    <span className="kv">{o.value_desc}</span>
+                    <span className="kv">{o.retail_value} → $0{o.cash_bonus > 0 ? ` + $${o.cash_bonus} cash` : ""}{!o.brief ? " · ⚠ no brief yet" : ""}</span>
                     {editing === o.id ? (
                       <OfferEditor initial={o} onDone={() => { setEditing(null); load(); }} onCancel={() => setEditing(null)} />
                     ) : (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSubmission } from "../../../lib/db";
+import { createSubmission, listClaims, getOffer } from "../../../lib/db";
 import { saveReceipt } from "../../../lib/storage";
 import { notify } from "../../../lib/notify";
 
@@ -14,10 +14,25 @@ export async function POST(req) {
     const email = String(fd.get("email") || "").trim().toLowerCase();
     const video_url = String(fd.get("video_url") || "").trim().slice(0, 500);
     const pick = String(fd.get("offer_pick") || "").trim();
-    const offer_text =
-      pick === "__other__"
-        ? String(fd.get("offer_other") || "").trim().slice(0, 300)
-        : pick.slice(0, 300);
+
+    let claim_id = null;
+    let offer_text;
+    if (pick.startsWith("claim:")) {
+      // Submission against one of the creator's active claims.
+      const claim = (await listClaims({ sweep: false })).find((c) => c.id === pick.slice(6));
+      if (claim) {
+        claim_id = claim.id;
+        const offer = await getOffer(claim.offer_id);
+        offer_text = offer ? `${offer.business_name} — ${offer.headline}` : "Claimed offer";
+      } else {
+        offer_text = "Claimed offer (not found)";
+      }
+    } else {
+      offer_text =
+        pick === "__other__"
+          ? String(fd.get("offer_other") || "").trim().slice(0, 300)
+          : pick.slice(0, 300);
+    }
 
     if (!name || !EMAIL_RE.test(email) || !video_url || !offer_text) {
       return NextResponse.json({ error: "missing required fields" }, { status: 400 });
@@ -35,7 +50,7 @@ export async function POST(req) {
     }
 
     const sub = await createSubmission({
-      claim_id: null,
+      claim_id,
       offer_text,
       name,
       email,

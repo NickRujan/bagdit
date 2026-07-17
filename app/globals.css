@@ -146,6 +146,49 @@ section{padding:64px 0}
   background:color-mix(in srgb, var(--card) 82%, transparent);
 }
 
+/* rich offer cards (image + body, whole card is a link) */
+.offer-rich{padding:0;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;gap:0}
+.offer-art{position:relative;aspect-ratio:16/9;background:var(--navy);overflow:hidden}
+.offer-art img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.offer-rich:hover .offer-art img{transform:scale(1.04)}
+.art-chip{position:absolute;top:12px;left:12px;background:color-mix(in srgb, #fff 92%, transparent);color:var(--navy)}
+.offer-art .stamp-bagged{top:12px;right:12px}
+.dist-pill{
+  position:absolute;bottom:12px;right:12px;
+  font-size:12px;font-weight:800;color:#fff;
+  background:rgba(11,27,58,.72);backdrop-filter:blur(4px);
+  padding:5px 11px;border-radius:99px;
+}
+.offer-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px}
+.view-deal{font-size:13.5px;font-weight:800;color:var(--accent);margin-top:6px}
+
+/* price treatment: struck retail → $0 (+cash chip) */
+.price-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:4px}
+.price-row s{font-size:16px;font-weight:700;color:var(--mut);text-decoration-thickness:2.5px}
+.price-row .zero-big{font-size:24px;font-weight:800;color:var(--accent);letter-spacing:-.02em}
+.price-row.big s{font-size:19px}
+.price-row.big .zero-big{font-size:32px}
+.cash-chip{
+  font-size:12.5px;font-weight:800;color:#0E9F6E;
+  background:#E3F5EE;border-radius:99px;padding:5px 12px;
+}
+.theme-dark .cash-chip{background:#0D2B22;color:#34D399}
+
+/* offer detail */
+.backlink{display:inline-block;font-size:14px;font-weight:800;text-decoration:none;color:var(--mut);margin-bottom:16px}
+.backlink:hover{color:var(--ink)}
+.detail-hero{overflow:hidden}
+.detail-art{aspect-ratio:16/9}
+@media(min-width:760px){
+  .detail-hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:stretch}
+  .detail-art{aspect-ratio:auto;min-height:100%}
+}
+.detail-head{padding:22px 22px 26px;display:flex;flex-direction:column;gap:6px}
+.map-embed{width:100%;height:240px;border:0;display:block}
+.dist-line{font-size:14px;font-weight:700;color:var(--mut);margin-top:8px}
+.dist-line.as-btn{background:none;border:none;cursor:pointer;font-family:inherit;text-align:left;padding:0;color:var(--accent)}
+.claim-success{margin-top:18px;display:grid;gap:12px}
+
 /* filter chips */
 .chips-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
 .fchip{

@@ -27,8 +27,8 @@ export default async function OffersPage() {
           <p className="kick">{SITE.city} · updated daily</p>
           <h1>Live offers</h1>
           <p className="sub">
-            Claim a spot, get your shoot brief within 24h from <b>{SITE.email}</b>,
-            go live it, film, get refunded + paid.
+            Claim with <b>one tap</b> — the shoot brief lands in your inbox
+            instantly. Then you've got <b>7 days</b> to go live it, film, and submit.
           </p>
         </div>
       </header>

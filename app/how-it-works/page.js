@@ -30,8 +30,12 @@ const FAQ = [
     a: "Cash bonuses and comped perks can count as taxable income. Keep your own records; we'll send tax documents where the law requires them. Not tax advice — ask a professional if you're earning a lot.",
   },
   {
+    q: "What happens if I claim and don't go?",
+    a: "Your claim holds the spot for 7 days. If you haven't submitted by then, the spot automatically goes back on the board for someone else — no penalty, no awkward email. Life happens.",
+  },
+  {
     q: "How do I know I'll actually get paid?",
-    a: `The ${SITE.city} pilot is run hands-on by a real human at ${SITE.email} — every claim gets a personal confirmation before you spend a dollar. Don't go until you've received your confirmation email.`,
+    a: `The ${SITE.city} pilot is run hands-on by a real human at ${SITE.email}. Your brief arrives by email the moment you claim — that email thread is your direct line for questions, changes, and payout issues.`,
   },
 ];
 
@@ -55,7 +59,7 @@ export default function HowItWorks() {
             <div className="card step reveal">
               <span className="n">1</span>
               <b>Claim an offer</b>
-              <p><Link href="/offers">The board</Link> shows what's live. Claim a spot — we confirm within 24h with a shoot brief.</p>
+              <p><Link href="/offers">The board</Link> shows what's live. One tap claims your spot and the business's shoot brief is emailed instantly.</p>
             </div>
             <div className="card step reveal d1">
               <span className="n">2</span>
