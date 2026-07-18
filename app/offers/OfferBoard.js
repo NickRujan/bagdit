@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "../../lib/config";
-import { milesBetween, fmtMiles, artFor } from "../../lib/geo";
+import { milesBetween, artFor, CITY_CENTER } from "../../lib/geo";
 
-function Price({ offer }) {
+function Price({ offer, big = false }) {
   return (
-    <p className="price-row">
+    <p className={big ? "price-row big" : "price-row"}>
       <s>{offer.retail_value}</s>
       <span className="zero-big">$0</span>
       {offer.cash_bonus > 0 && <span className="cash-chip">+ ${offer.cash_bonus} cash</span>}
@@ -14,34 +14,36 @@ function Price({ offer }) {
   );
 }
 
-export default function OfferBoard({ offers }) {
-  const [cat, setCat] = useState("all");
-  const [loc, setLoc] = useState(null);
-  const [locState, setLocState] = useState("idle"); // idle | busy | on | denied
+function distText(mi, approx) {
+  const d = mi < 10 ? mi.toFixed(1) : String(Math.round(mi));
+  return approx ? `${d} mi · downtown` : `${d} mi`;
+}
 
-  // Re-use a previously granted location without re-prompting.
+// Silently reuse a granted location; prompt once otherwise; fall back to
+// distances from downtown Bay City (labelled) — like marketplace apps.
+export function useVisitorLocation() {
+  const [loc, setLoc] = useState(null); // {lat,lng,approx}
   useEffect(() => {
     const cached = sessionStorage.getItem("bagdit_loc");
-    if (cached) {
-      setLoc(JSON.parse(cached));
-      setLocState("on");
-    }
-  }, []);
-
-  function askLocation() {
-    if (!navigator.geolocation) return setLocState("denied");
-    setLocState("busy");
+    if (cached) return setLoc(JSON.parse(cached));
+    const fallback = { ...CITY_CENTER, approx: true };
+    if (!navigator.geolocation) return setLoc(fallback);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        const p = { lat: pos.coords.latitude, lng: pos.coords.longitude, approx: false };
         sessionStorage.setItem("bagdit_loc", JSON.stringify(p));
         setLoc(p);
-        setLocState("on");
       },
-      () => setLocState("denied"),
+      () => setLoc(fallback),
       { maximumAge: 600000, timeout: 8000 }
     );
-  }
+  }, []);
+  return loc;
+}
+
+export default function OfferBoard({ offers }) {
+  const [cat, setCat] = useState("all");
+  const loc = useVisitorLocation();
 
   const withDist = offers.map((o) => ({
     ...o,
@@ -60,14 +62,6 @@ export default function OfferBoard({ offers }) {
             {c.label}
           </button>
         ))}
-        <button
-          className={locState === "on" ? "fchip on" : "fchip"}
-          onClick={askLocation}
-          disabled={locState === "busy"}
-          title="Sort by distance from you"
-        >
-          {locState === "busy" ? "Locating…" : locState === "on" ? "📍 Near you" : locState === "denied" ? "📍 Location off" : "📍 Show distances"}
-        </button>
       </div>
 
       {shown.length === 0 && (
@@ -87,7 +81,7 @@ export default function OfferBoard({ offers }) {
                 <img src={artFor(o)} alt="" loading="lazy" />
                 <span className="chip art-chip">{catLabel(o.category)}</span>
                 {done && <span className="stamp-bagged">Bagged</span>}
-                {o.dist != null && <span className="dist-pill">{fmtMiles(o.dist)}</span>}
+                {o.dist != null && <span className="dist-pill">{distText(o.dist, loc.approx)}</span>}
               </div>
               <div className="offer-body">
                 <div className="offer-top">

@@ -5,7 +5,7 @@ export const metadata = { title: "Terms of Service" };
 
 export default function Terms() {
   return (
-    <Shell>
+    <Shell theme="dark">
       <section>
         <div className="wrap prose">
           <p className="kick">Legal</p>

@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <Shell>
+    <Shell theme="dark">
       <header className="hero center">
         <div className="wrap">
           <p className="kick">{SITE.city} pilot · live now</p>

@@ -5,7 +5,7 @@ export const metadata = { title: "Privacy Policy" };
 
 export default function Privacy() {
   return (
-    <Shell>
+    <Shell theme="dark">
       <section>
         <div className="wrap prose">
           <p className="kick">Legal</p>

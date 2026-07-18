@@ -39,7 +39,7 @@ export default function ClaimButton({ offer, done, days }) {
     return (
       <div className="claim-success">
         <p className="form-msg ok" style={{ marginTop: 0 }}>
-          🎉 It's yours. The full brief just went to your email — you have{" "}
+          It's yours. The full brief just went to your email — you have{" "}
           <b>{state.days} days</b> to visit and film.
         </p>
         <details className="card" style={{ padding: "14px 16px", boxShadow: "none" }}>
@@ -59,7 +59,7 @@ export default function ClaimButton({ offer, done, days }) {
   return (
     <div style={{ marginTop: 18 }}>
       <button className="btn" onClick={claim} disabled={state.status === "busy"}>
-        {state.status === "busy" ? "Claiming…" : "Claim this — it's one tap"}
+        {state.status === "busy" ? "Claiming…" : "Claim this offer"}
       </button>
       <p className="fine" style={{ marginTop: 10 }}>
         Signed-up creators claim instantly — the brief is emailed automatically.

@@ -2,6 +2,7 @@ import Shell from "../components/Shell";
 import SubmitForm from "./SubmitForm";
 import { listOffers, claimsForCreator } from "../../lib/db";
 import { currentCreator } from "../../lib/creator-auth";
+import { parseCap } from "../../lib/geo";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export default async function SubmitPage({ searchParams }) {
           label: offerById[c.offer_id]
             ? `${offerById[c.offer_id].business_name} — ${offerById[c.offer_id].headline}`
             : "Claimed offer",
+          cap: offerById[c.offer_id] ? parseCap(offerById[c.offer_id].retail_value) : null,
         }));
     }
   } catch {
@@ -44,7 +46,7 @@ export default async function SubmitPage({ searchParams }) {
     : null;
 
   return (
-    <Shell>
+    <Shell theme="dark">
       <header className="hero">
         <div className="wrap">
           <p className="kick">Creator submission</p>
@@ -59,7 +61,7 @@ export default async function SubmitPage({ searchParams }) {
       <section style={{ paddingTop: 0, paddingBottom: 84 }}>
         <div className="wrap grid2" style={{ alignItems: "start" }}>
           <SubmitForm
-            offers={offers.map((o) => ({ id: o.id, label: `${o.business_name} — ${o.headline}` }))}
+            offers={offers.map((o) => ({ id: o.id, label: `${o.business_name} — ${o.headline}`, cap: parseCap(o.retail_value) }))}
             creator={safeCreator}
             myClaims={myClaims}
             preselect={preselect || ""}

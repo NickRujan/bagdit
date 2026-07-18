@@ -1,42 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
-import { milesBetween, fmtMiles } from "../../../lib/geo";
+import { milesBetween } from "../../../lib/geo";
+import { useVisitorLocation } from "../OfferBoard";
 
 export default function DistanceLine({ lat, lng }) {
-  const [dist, setDist] = useState(null);
-  const [state, setState] = useState("idle");
-
-  useEffect(() => {
-    const cached = sessionStorage.getItem("bagdit_loc");
-    if (cached && lat && lng) {
-      const p = JSON.parse(cached);
-      setDist(milesBetween(p.lat, p.lng, lat, lng));
-      setState("on");
-    }
-  }, [lat, lng]);
-
-  function ask() {
-    if (!navigator.geolocation) return setState("denied");
-    setState("busy");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        sessionStorage.setItem("bagdit_loc", JSON.stringify(p));
-        setDist(milesBetween(p.lat, p.lng, lat, lng));
-        setState("on");
-      },
-      () => setState("denied"),
-      { maximumAge: 600000, timeout: 8000 }
-    );
-  }
-
-  if (!lat || !lng) return null;
-  if (state === "on" && dist != null) {
-    return <p className="dist-line">📍 {fmtMiles(dist)}</p>;
-  }
+  const loc = useVisitorLocation();
+  if (!lat || !lng || !loc) return null;
+  const mi = milesBetween(loc.lat, loc.lng, lat, lng);
+  const d = mi < 10 ? mi.toFixed(1) : String(Math.round(mi));
   return (
-    <button className="dist-line as-btn" onClick={ask} disabled={state === "busy"}>
-      📍 {state === "busy" ? "Locating…" : state === "denied" ? "Location unavailable" : "How far is this from me?"}
-    </button>
+    <p className="dist-line">
+      {loc.approx ? `${d} mi from downtown Bay City` : `${d} mi from you`}
+    </p>
   );
 }

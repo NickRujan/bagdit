@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function JoinPage() {
   return (
-    <Shell>
+    <Shell theme="dark">
       <section style={{ paddingTop: 56 }}>
         <div className="wrap" style={{ maxWidth: 520 }}>
           <p className="kick">Creators</p>

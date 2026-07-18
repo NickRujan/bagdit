@@ -33,7 +33,7 @@ export default async function OfferDetail({ params }) {
     : null;
 
   return (
-    <Shell>
+    <Shell theme="dark">
       <section style={{ paddingTop: 28, paddingBottom: 84 }}>
         <div className="wrap" style={{ maxWidth: 900 }}>
           <Link href="/offers" className="backlink">← All offers</Link>
@@ -64,7 +64,7 @@ export default async function OfferDetail({ params }) {
 
           <div className="grid2" style={{ marginTop: 22, alignItems: "start" }}>
             <div className="card" style={{ padding: "24px 22px" }}>
-              <h3 className="sec">🎬 What you'll film</h3>
+              <h3 className="sec">What you'll film</h3>
               <p className="kv" style={{ whiteSpace: "pre-wrap", fontSize: 15, color: "var(--ink)", fontWeight: 500, lineHeight: 1.65 }}>
                 {briefSummary}
               </p>
@@ -104,7 +104,7 @@ export default async function OfferDetail({ params }) {
                 </>
               ) : (
                 <div style={{ padding: "24px 22px" }}>
-                  <h3 className="sec">📍 Location</h3>
+                  <h3 className="sec">Location</h3>
                   <p className="kv">{offer.address || offer.neighborhood}</p>
                 </div>
               )}

@@ -41,7 +41,7 @@ const FAQ = [
 
 export default function HowItWorks() {
   return (
-    <Shell>
+    <Shell theme="dark">
       <header className="hero">
         <div className="wrap">
           <p className="kick">The whole loop</p>

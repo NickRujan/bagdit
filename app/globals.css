@@ -20,7 +20,7 @@
   --warn:#C27803;
   --bad:#DC2626;
   --shadow:0 10px 30px rgba(11,27,58,.07);
-  --radius:18px;
+  --radius:14px;
 }
 .theme-dark{
   --bg:#070F22;
@@ -73,7 +73,7 @@ img,svg{display:block;max-width:100%}
 .btn{
   display:inline-block;text-align:center;text-decoration:none;cursor:pointer;
   font-family:inherit;font-weight:800;font-size:15px;letter-spacing:-.1px;
-  padding:14px 26px;border-radius:13px;border:0;
+  padding:14px 26px;border-radius:10px;border:0;
   background:var(--blue);color:#fff;
   box-shadow:0 4px 14px rgba(37,99,235,.28);
   transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
@@ -281,6 +281,17 @@ footer .socials{display:flex;gap:14px;margin-top:8px}
 .prose li{margin-bottom:8px}
 .prose ul,.prose ol{padding-left:22px;margin-bottom:14px}
 .prose b,.prose strong{color:var(--ink)}
+
+/* ---------- account dashboard (SideShift-style panels) ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+@media(min-width:680px){.tiles{grid-template-columns:repeat(4,1fr);gap:14px}}
+.tile{padding:18px 18px 16px;display:flex;flex-direction:column;gap:2px}
+.tile-n{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.tile-l{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.wallet-panel{margin-top:14px;padding:20px 20px 16px}
+.wallet-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.wallet-id{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wallet-handle{color:var(--mut);font-weight:700;font-size:15px}
 
 /* ---------- admin ---------- */
 .tabbar{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}

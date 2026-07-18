@@ -9,6 +9,11 @@ export default function SubmitForm({ offers, creator, myClaims, preselect }) {
     preselect && myClaims.some((c) => c.id === preselect) ? `claim:${preselect}` : ""
   );
 
+  // Refund cap comes from whatever the business set as the offer's value.
+  const selectedCap = offerChoice.startsWith("claim:")
+    ? myClaims.find((c) => `claim:${c.id}` === offerChoice)?.cap ?? null
+    : offers.find((o) => o.label === offerChoice)?.cap ?? null;
+
   async function onSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -20,11 +25,12 @@ export default function SubmitForm({ offers, creator, myClaims, preselect }) {
       if (!res.ok) throw new Error(out.error || "failed");
       setState({ status: "ok" });
     } catch (err) {
+      const m = String(err.message);
       setState({
         status: "err",
         msg:
-          String(err.message).includes("large") || String(err.message).includes("type")
-            ? err.message
+          m.includes("large") || m.includes("type") || m.includes("cap")
+            ? m
             : "Couldn't send that — check the receipt file (photo or PDF, under 10 MB) and try again.",
       });
     }
@@ -111,7 +117,23 @@ export default function SubmitForm({ offers, creator, myClaims, preselect }) {
       </div>
       <div className="field">
         <label htmlFor="sf-total">Receipt total</label>
-        <input id="sf-total" name="receipt_total" required placeholder="$38.40" inputMode="decimal" />
+        <input
+          id="sf-total"
+          name="receipt_total"
+          type="number"
+          step="0.01"
+          min="0.01"
+          max={selectedCap ?? undefined}
+          required
+          placeholder="38.40"
+          inputMode="decimal"
+        />
+        {selectedCap && (
+          <span className="hint">
+            This offer's refund cap is ${selectedCap} — that's the most the business
+            covers. Anything you spend above it is on you.
+          </span>
+        )}
       </div>
 
       {!creator && (

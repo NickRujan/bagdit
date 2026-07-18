@@ -61,7 +61,7 @@ export default function JoinForm() {
               <input id="j-social" name="social_handle" placeholder="@you" />
             </div>
             <div className="card" style={{ padding: "18px 18px 20px", boxShadow: "none" }}>
-              <h3 className="sec" style={{ fontSize: 15, marginBottom: 4 }}>💸 Your wallet</h3>
+              <h3 className="sec" style={{ fontSize: 15, marginBottom: 4 }}>Your wallet</h3>
               <p className="hint" style={{ fontSize: 12.5, color: "var(--mut)", fontWeight: 600, marginBottom: 12 }}>
                 Where refunds + bonuses go. You can change this anytime.
               </p>
