@@ -27,7 +27,7 @@ export async function POST(req) {
       `Email: ${row.email}`,
       row.city ? `City: ${row.city}` : null,
       ``,
-      `Admin: https://www.bagdit.app/admin`,
+      `Admin: https://bagdit.app/admin`,
     ].filter(Boolean));
     return NextResponse.json({ ok: true });
   } catch (err) {

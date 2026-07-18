@@ -85,7 +85,7 @@ export async function POST(req) {
       `Payout: ${sub.payout_method} → ${sub.payout_handle}`,
       ``,
       `Next: review the video, then mark sent_to_business in /admin.`,
-      `Admin: https://www.bagdit.app/admin`,
+      `Admin: https://bagdit.app/admin`,
     ]);
     return NextResponse.json({ ok: true });
   } catch (err) {

@@ -46,7 +46,7 @@ export async function POST(req) {
       `How it works from here:`,
       `1. Visit within ${CLAIM_DAYS} days — after that your spot opens back up for someone else.`,
       `2. Pay like a normal customer and KEEP THE RECEIPT.`,
-      `3. Submit your video + receipt at https://www.bagdit.app/submit`,
+      `3. Submit your video + receipt at https://bagdit.app/submit`,
       `4. Approval = full refund + bonus to your ${creator.payout_method || "chosen payout"} within 48h.`,
       ``,
       `Questions? Just reply.`,
@@ -59,7 +59,7 @@ export async function POST(req) {
       `Payout on file: ${creator.payout_method || "—"} ${creator.payout_handle || ""}`,
       `Spots now: ${Math.max(0, offer.spots_remaining - 1)}/${offer.spots_total}`,
       `Expires: ${claim.expires_at}`,
-      `Brief was auto-sent. Admin: https://www.bagdit.app/admin`,
+      `Brief was auto-sent. Admin: https://bagdit.app/admin`,
     ]);
 
     return NextResponse.json({
