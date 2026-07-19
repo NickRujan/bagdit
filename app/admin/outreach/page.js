@@ -165,6 +165,14 @@ export default function Outreach() {
     await fetch("/api/admin/outreach/resume", { method: "POST" });
     load();
   }
+  async function toggleAuto() {
+    await fetch("/api/admin/outreach/mode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ on: !data.autoSend }),
+    });
+    load();
+  }
 
   const grouped = useMemo(() => {
     if (!data) return {};
@@ -194,6 +202,25 @@ export default function Outreach() {
                 <button className="btn btn-xs btn-ghost" onClick={load}>Refresh</button>
               </div>
             </div>
+
+            <div className="card" style={{ padding: "16px 18px", marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <div>
+                <b style={{ fontSize: 15 }}>{data.autoSend ? "Hands-off mode: ON" : "Manual mode: approve each email"}</b>
+                <p className="kv" style={{ marginTop: 2 }}>
+                  {data.autoSend
+                    ? `Emails with a verified address send on their own inside the rails (${data.cap}/day, spaced, weekday business hours). You get an email each time one goes out, and every reply stops automation + comes to you with a suggested response.`
+                    : "Nothing sends until you approve it on the card below."}
+                </p>
+              </div>
+              <button className={data.autoSend ? "btn btn-xs btn-ghost" : "btn btn-xs"} onClick={toggleAuto}>
+                {data.autoSend ? "Switch to manual" : "Turn on hands-off"}
+              </button>
+            </div>
+            {data.noEmailCount > 0 && (
+              <p className="notice">
+                <b>{data.noEmailCount} prospects have no email</b> — those can't auto-send. They have a Facebook page instead: open the card, hit <b>FB</b>, and send a quick DM by hand (Facebook doesn't allow automated messages).
+              </p>
+            )}
 
             {data.paused?.on && (
               <div className="form-msg err" style={{ maxWidth: "none", display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
