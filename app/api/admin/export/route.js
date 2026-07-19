@@ -1,4 +1,4 @@
-import { listOffers, listClaims, listSubmissions, listWaitlist } from "../../../../lib/db";
+import { listOffers, listClaims, listSubmissions, listWaitlist, withdrawalRequests } from "../../../../lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +7,7 @@ const TABLES = {
   claims: listClaims,
   submissions: listSubmissions,
   waitlist: listWaitlist,
+  withdrawals: () => withdrawalRequests.list(),
 };
 
 function toCsv(rows) {

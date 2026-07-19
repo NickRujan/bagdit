@@ -1,0 +1,22 @@
+{
+  "name": "Bagdit",
+  "short_name": "Bagdit",
+  "description": "Free local experiences, paid in video. Claim an offer, film 30 seconds, get paid.",
+  "start_url": "/offers",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070F22",
+  "theme_color": "#070F22",
+  "orientation": "portrait",
+  "categories": ["food", "lifestyle", "shopping"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Offers", "short_name": "Offers", "url": "/offers" },
+    { "name": "Wallet", "short_name": "Wallet", "url": "/account?tab=wallet" }
+  ]
+}

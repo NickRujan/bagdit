@@ -68,9 +68,24 @@ create table if not exists submissions (
   payout_handle text not null default '',
   status text not null default 'pending'
     check (status in ('pending','sent_to_business','approved','rejected','paid')),
+  posted boolean not null default false,       -- creator marked it posted to their socials
   notes text not null default '',
   created_at timestamptz not null default now()
 );
+
+-- Creator payout requests (fulfilled manually during the pilot).
+create table if not exists withdrawal_requests (
+  id uuid primary key default gen_random_uuid(),
+  creator_id uuid references creators(id) on delete cascade,
+  amount numeric not null default 0,
+  payout_method text not null default '',
+  payout_handle text not null default '',
+  status text not null default 'requested'
+    check (status in ('requested','processing','paid','rejected')),
+  note text not null default '',
+  created_at timestamptz not null default now()
+);
+alter table withdrawal_requests enable row level security;
 
 create table if not exists waitlist (
   id uuid primary key default gen_random_uuid(),

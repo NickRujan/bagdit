@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Nav from "./Nav";
+import { InstallBanner } from "./Install";
 import { SITE, SOCIALS } from "../../lib/config";
 
 export default function Shell({ theme = "light", children }) {
   return (
     <div className={theme === "dark" ? "shell theme-dark" : "shell"}>
+      <InstallBanner />
       <Nav theme={theme} />
       <main>{children}</main>
       <footer>
@@ -21,7 +23,7 @@ export default function Shell({ theme = "light", children }) {
           </div>
           <span className="foot-links">
             <Link href="/offers">Offers</Link>
-            <Link href="/submit">Submit a video</Link>
+            <Link href="/app">Get the app</Link>
             <Link href="/business">For businesses</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/privacy">Privacy</Link>

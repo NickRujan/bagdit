@@ -122,10 +122,12 @@ export default function Admin() {
     );
   }
 
+  const withdrawals = data.withdrawals || [];
   const counts = {
     offers: data.offers.length,
     claims: data.claims.filter((c) => c.status === "pending").length,
     submissions: data.submissions.filter((s) => !["paid", "rejected"].includes(s.status)).length,
+    withdrawals: withdrawals.filter((w) => ["requested", "processing"].includes(w.status)).length,
     waitlist: data.waitlist.length,
   };
 
@@ -148,7 +150,7 @@ export default function Admin() {
             </div>
 
             <div className="tabbar">
-              {["claims", "submissions", "offers", "waitlist"].map((t) => (
+              {["claims", "submissions", "withdrawals", "offers", "waitlist"].map((t) => (
                 <button key={t} className={tab === t ? "fchip on" : "fchip"} onClick={() => setTab(t)}>
                   {t[0].toUpperCase() + t.slice(1)}
                   {counts[t] > 0 && <span className="count-dot">{counts[t]}</span>}
@@ -265,6 +267,34 @@ export default function Admin() {
                         )}
                       </div>
                     )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ---------------- WITHDRAWALS ---------------- */}
+            {tab === "withdrawals" && (
+              <div className="stack">
+                {withdrawals.length === 0 && <p className="notice">No withdrawal requests yet.</p>}
+                {withdrawals.map((w) => (
+                  <div key={w.id} className="card rowcard">
+                    <div className="row-top">
+                      <span className="row-title">{w.creator_name || "Creator"} — ${Number(w.amount).toFixed(2)}</span>
+                      <Pill s={w.status} />
+                    </div>
+                    <span className="kv">{w.creator_email} · requested {fmt(w.created_at)}</span>
+                    <span className="kv">Send via <b>{w.payout_method} → {w.payout_handle}</b></span>
+                    <div className="rowactions">
+                      {w.status === "requested" && (
+                        <button className="btn btn-xs" onClick={() => patch("/api/admin/withdrawals", { id: w.id, status: "processing" })}>Mark processing</button>
+                      )}
+                      {["requested", "processing"].includes(w.status) && (
+                        <button className="btn btn-xs" onClick={() => patch("/api/admin/withdrawals", { id: w.id, status: "paid" })}>Mark paid ✓</button>
+                      )}
+                      {w.status !== "paid" && (
+                        <button className="btn btn-xs btn-ghost" onClick={() => patch("/api/admin/withdrawals", { id: w.id, status: "rejected" })}>Reject</button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

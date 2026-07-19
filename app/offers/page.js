@@ -1,5 +1,7 @@
 import Shell from "../components/Shell";
 import OfferBoard from "./OfferBoard";
+import { OffersInstallCard } from "../components/Install";
+import CreatorTabBar from "../components/CreatorTabBar";
 import { listOffers } from "../../lib/db";
 import { SITE } from "../../lib/config";
 
@@ -45,6 +47,8 @@ export default async function OffersPage({ searchParams }) {
           )}
         </div>
       </section>
+      <OffersInstallCard />
+      <CreatorTabBar />
     </Shell>
   );
 }
