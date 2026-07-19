@@ -2,119 +2,103 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+const CLOSED = ["opted_out", "bounced", "no_response_call", "not_a_fit", "called"];
+
 const PIPELINE = [
-  { key: "work", label: "To work", statuses: ["new", "drafted", "followup_drafted"] },
-  { key: "queued", label: "Queued", statuses: ["approved"] },
-  { key: "sent", label: "Sent", statuses: ["sent", "followed_up"] },
-  { key: "replied", label: "Replied", statuses: ["replied"] },
-  { key: "done", label: "Closed", statuses: ["opted_out", "bounced", "no_response_call", "not_a_fit"] },
+  { key: "calls", label: "Call list" },
+  { key: "email", label: "Emailing" },
+  { key: "sent", label: "Sent" },
+  { key: "replied", label: "Replied" },
+  { key: "done", label: "Closed" },
 ];
 
 const PILL = {
   new: "dim", drafted: "warn", approved: "", sent: "ok", followup_drafted: "warn",
   followed_up: "ok", replied: "ok", opted_out: "bad", bounced: "bad",
-  no_response_call: "dim", not_a_fit: "dim",
+  no_response_call: "dim", not_a_fit: "dim", called: "ok",
 };
 
 function Pill({ s }) {
   return <span className={`pill ${PILL[s] ?? ""}`}>{s.replaceAll("_", " ")}</span>;
 }
 
-function ProspectCard({ p, emails, onPatch, onDraft, onEmailPatch }) {
-  const [edit, setEdit] = useState({ email: p.email || "", facebook: p.facebook || "" });
-  const draft = emails.find((e) => e.prospect_id === p.id && e.status === "draft");
-  const queued = emails.find((e) => e.prospect_id === p.id && e.status === "approved");
-  const sent = emails.filter((e) => e.prospect_id === p.id && e.status === "sent");
-  const [draftEdit, setDraftEdit] = useState(null);
+function telHref(phone) {
+  const clean = String(phone || "").replace(/[^0-9+]/g, "");
+  return clean ? `tel:${clean}` : null;
+}
 
+// ---- Call list card: phone-first, for prospects with no email ----
+function CallCard({ p, onPatch }) {
+  const [email, setEmail] = useState("");
+  const [note, setNote] = useState("");
+  const tel = telHref(p.phone);
   return (
     <div className="card rowcard">
       <div className="row-top">
-        <span className="row-title">
-          {p.business} <span className="pill dim">{p.priority}</span>
-        </span>
+        <span className="row-title">{p.business} <span className="pill dim">{p.priority}</span></span>
+        {tel
+          ? <a className="btn btn-xs" href={tel}>Call {p.phone}</a>
+          : <span className="pill bad">no phone listed</span>}
+      </div>
+      <span className="kv">{p.category}{p.google_rating ? ` · ${p.google_rating}★` : ""}</span>
+      {p.owner_name && p.owner_name !== "—" && <span className="kv">Ask for: <b>{p.owner_name}</b></span>}
+      <span className="kv"><b>Best time to call:</b> {p.call_window || "anytime midafternoon"}</span>
+      <span className="kv"><b>Pitch this offer:</b> {p.offer_idea}</span>
+      {p.notes && <span className="kv" style={{ fontStyle: "italic" }}>{p.notes}</span>}
+      <div className="rowactions" style={{ alignItems: "stretch" }}>
+        <input
+          style={{ flex: "1 1 200px", padding: "8px 10px", fontSize: 13.5 }}
+          placeholder="got their email on the call? add it → it auto-emails"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={() => email && onPatch(p.id, { email })}
+        />
+      </div>
+      <div className="rowactions" style={{ alignItems: "stretch" }}>
+        <input
+          style={{ flex: "1 1 200px", padding: "8px 10px", fontSize: 13.5 }}
+          placeholder="quick note (e.g. 'called 7/20, ask again Fri')"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          onBlur={() => note && note !== p.notes && onPatch(p.id, { notes: note })}
+        />
+      </div>
+      <div className="rowactions">
+        <button className="btn btn-xs" onClick={() => onPatch(p.id, { status: "called" })}>Mark called ✓</button>
+        <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "not_a_fit" })}>Not a fit</button>
+      </div>
+    </div>
+  );
+}
+
+// ---- Email card: the automated track (mostly watch-only) ----
+function EmailCard({ p, emails, onPatch }) {
+  const draft = emails.find((e) => e.prospect_id === p.id && e.status === "draft");
+  const queued = emails.find((e) => e.prospect_id === p.id && e.status === "approved");
+  const sent = emails.filter((e) => e.prospect_id === p.id && e.status === "sent");
+  const shown = queued || draft;
+  return (
+    <div className="card rowcard">
+      <div className="row-top">
+        <span className="row-title">{p.business} <span className="pill dim">{p.priority}</span></span>
         <Pill s={p.status} />
       </div>
-      <span className="kv">{p.category} · {p.google_rating}★ · {p.phone || "no phone"} · call {p.call_window || "—"}</span>
-      {p.owner_name && p.owner_name !== "—" && <span className="kv">Contact: <b>{p.owner_name}</b></span>}
-      <span className="kv">Offer idea: <b>{p.offer_idea}</b></span>
-      <span className="kv" style={{ fontStyle: "italic" }}>{p.notes}</span>
-
-      <div className="rowactions" style={{ alignItems: "stretch", gap: 8 }}>
-        <input
-          style={{ flex: "1 1 180px", padding: "8px 10px", fontSize: 13.5 }}
-          placeholder="email@business.com"
-          value={edit.email}
-          onChange={(e) => setEdit({ ...edit, email: e.target.value })}
-          onBlur={() => edit.email !== (p.email || "") && onPatch(p.id, { email: edit.email })}
-        />
-        <input
-          style={{ flex: "1 1 180px", padding: "8px 10px", fontSize: 13.5 }}
-          placeholder="facebook.com/…"
-          value={edit.facebook}
-          onChange={(e) => setEdit({ ...edit, facebook: e.target.value })}
-          onBlur={() => edit.facebook !== (p.facebook || "") && onPatch(p.id, { facebook: edit.facebook })}
-        />
-      </div>
-
+      <span className="kv">{p.email}</span>
+      <span className="kv"><b>Offer:</b> {p.offer_idea}</span>
+      {queued && <span className="kv"><b>Queued</b> — sends automatically in the next weekday window.</span>}
       {sent.length > 0 && (
-        <span className="kv">
-          {sent.length} email{sent.length > 1 ? "s" : ""} sent · last {new Date(sent[0].sent_at).toLocaleDateString()}
-          {p.followup_due ? ` · follow-up due ${p.followup_due}` : ""}
-        </span>
+        <span className="kv">{sent.length} sent · last {new Date(sent[0].sent_at).toLocaleDateString()}{p.followup_due ? ` · follow-up due ${p.followup_due}` : ""}</span>
       )}
-      {queued && <span className="kv"><b>Approved & queued</b> — sends automatically inside the next window.</span>}
-
-      {draft && (
-        <div className="card" style={{ padding: "14px 14px 16px", boxShadow: "none" }}>
-          <span className="kv"><b>{draft.kind === "followup" ? "Follow-up draft" : "Intro draft"}</b> — review, edit, approve:</span>
-          <input
-            style={{ marginTop: 8, fontSize: 13.5, fontWeight: 700 }}
-            value={(draftEdit ?? draft).subject}
-            onChange={(e) => setDraftEdit({ ...(draftEdit ?? draft), subject: e.target.value })}
-          />
-          <textarea
-            style={{ marginTop: 8, minHeight: 240, fontSize: 13.5, lineHeight: 1.5 }}
-            value={(draftEdit ?? draft).body}
-            onChange={(e) => setDraftEdit({ ...(draftEdit ?? draft), body: e.target.value })}
-          />
-          <div className="rowactions">
-            <button
-              className="btn btn-xs"
-              onClick={() => onEmailPatch(draft.id, { subject: (draftEdit ?? draft).subject, body: (draftEdit ?? draft).body, approve: true })}
-              disabled={!p.email}
-              title={p.email ? "" : "Paste their email address first"}
-            >
-              {p.email ? "Approve — queue to send" : "Needs email address"}
-            </button>
-            {draftEdit && (
-              <button className="btn btn-xs btn-ghost" onClick={() => onEmailPatch(draft.id, { subject: draftEdit.subject, body: draftEdit.body }) || setDraftEdit(null)}>
-                Save edits
-              </button>
-            )}
-            <button className="btn btn-xs btn-ghost" onClick={() => onEmailPatch(draft.id, { cancel: true })}>Discard</button>
-          </div>
-        </div>
+      {shown && (
+        <details>
+          <summary className="kv" style={{ cursor: "pointer" }}><b>Preview the email</b></summary>
+          <p className="kv" style={{ marginTop: 8, fontWeight: 700 }}>{shown.subject}</p>
+          <p className="kv" style={{ whiteSpace: "pre-wrap", marginTop: 4 }}>{shown.body}</p>
+        </details>
       )}
-
       <div className="rowactions">
-        {!draft && !queued && !["replied", "opted_out", "bounced"].includes(p.status) && sent.length < 2 && (
-          <button className="btn btn-xs btn-ghost" onClick={() => onDraft(p.id, sent.length > 0 ? "followup" : "intro")}>
-            {sent.length > 0 ? "Draft follow-up" : "Generate draft"}
-          </button>
-        )}
-        {["sent", "followed_up", "approved", "followup_drafted"].includes(p.status) && (
-          <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "replied" })}>
-            Mark replied (stops automation)
-          </button>
-        )}
-        {p.status !== "not_a_fit" && (
-          <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "not_a_fit" })}>Not a fit</button>
-        )}
-        {p.facebook && (
-          <a className="btn btn-xs btn-ghost" href={p.facebook.startsWith("http") ? p.facebook : `https://${p.facebook}`} target="_blank" rel="noopener noreferrer">FB</a>
-        )}
-        {p.email && <a className="btn btn-xs btn-ghost" href={`mailto:${p.email}`}>Email manually</a>}
+        <a className="btn btn-xs btn-ghost" href={`mailto:${p.email}`}>Email manually</a>
+        <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "not_a_fit" })}>Not a fit</button>
       </div>
     </div>
   );
@@ -122,7 +106,7 @@ function ProspectCard({ p, emails, onPatch, onDraft, onEmailPatch }) {
 
 export default function Outreach() {
   const [data, setData] = useState(null);
-  const [tab, setTab] = useState("work");
+  const [tab, setTab] = useState("calls");
   const [err, setErr] = useState("");
   const [testState, setTestState] = useState("");
   const [ticking, setTicking] = useState(false);
@@ -139,21 +123,11 @@ export default function Outreach() {
     await fetch("/api/admin/outreach/prospect", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...patch }) });
     load();
   }
-  async function draft(prospect_id, kind) {
-    const r = await fetch("/api/admin/outreach/draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prospect_id, kind }) });
-    if (!r.ok) setErr((await r.json()).error || "draft failed");
-    load();
-  }
-  async function patchEmail(id, patch) {
-    const r = await fetch("/api/admin/outreach/draft", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, ...patch }) });
-    if (!r.ok) setErr((await r.json()).error || "update failed");
-    load();
-  }
   async function testSend() {
     setTestState("testing…");
     const r = await fetch("/api/admin/outreach/test-send", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to: "hello@bagdit.app" }) });
     const out = await r.json();
-    setTestState(r.ok ? "SMTP ✓ · sent ✓ · IMAP ✓ — check hello@" : `failed: ${out.error} (smtp:${out.smtp} imap:${out.imap})`);
+    setTestState(r.ok ? "SMTP ✓ · sent ✓ · IMAP ✓ — check hello@" : `failed: ${out.error}`);
   }
   async function tick() {
     setTicking(true);
@@ -161,24 +135,22 @@ export default function Outreach() {
     setTicking(false);
     load();
   }
-  async function resume() {
-    await fetch("/api/admin/outreach/resume", { method: "POST" });
-    load();
-  }
+  async function resume() { await fetch("/api/admin/outreach/resume", { method: "POST" }); load(); }
   async function toggleAuto() {
-    await fetch("/api/admin/outreach/mode", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ on: !data.autoSend }),
-    });
+    await fetch("/api/admin/outreach/mode", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ on: !data.autoSend }) });
     load();
   }
 
   const grouped = useMemo(() => {
     if (!data) return {};
-    const g = {};
-    for (const t of PIPELINE) g[t.key] = data.prospects.filter((p) => t.statuses.includes(p.status));
-    return g;
+    const ps = data.prospects;
+    return {
+      calls: ps.filter((p) => !p.email && !CLOSED.includes(p.status)),
+      email: ps.filter((p) => p.email && !CLOSED.includes(p.status) && !["sent", "followed_up", "replied"].includes(p.status)),
+      sent: ps.filter((p) => ["sent", "followed_up"].includes(p.status)),
+      replied: ps.filter((p) => p.status === "replied"),
+      done: ps.filter((p) => CLOSED.includes(p.status)),
+    };
   }, [data]);
 
   if (!data) {
@@ -198,57 +170,47 @@ export default function Outreach() {
                 <h1 style={{ fontSize: 30 }}>Bay City pipeline</h1>
               </div>
               <div className="rowactions">
-                <button className="btn btn-xs btn-ghost" onClick={tick} disabled={ticking}>{ticking ? "Running…" : "Run tick now"}</button>
+                <button className="btn btn-xs btn-ghost" onClick={tick} disabled={ticking}>{ticking ? "Running…" : "Run now"}</button>
                 <button className="btn btn-xs btn-ghost" onClick={load}>Refresh</button>
               </div>
             </div>
 
-            <div className="card" style={{ padding: "16px 18px", marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div className="card" style={{ padding: "16px 18px", marginTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
               <div>
-                <b style={{ fontSize: 15 }}>{data.autoSend ? "Hands-off mode: ON" : "Manual mode: approve each email"}</b>
+                <b style={{ fontSize: 15 }}>Email track: {data.autoSend ? "hands-off (auto-sending)" : "manual"}</b>
                 <p className="kv" style={{ marginTop: 2 }}>
                   {data.autoSend
-                    ? `Emails with a verified address send on their own inside the rails (${data.cap}/day, spaced, weekday business hours). You get an email each time one goes out, and every reply stops automation + comes to you with a suggested response.`
-                    : "Nothing sends until you approve it on the card below."}
+                    ? `The ${grouped.email?.length ?? 0} businesses with an email address get contacted automatically — ${data.cap}/day, weekday business hours. You just watch. The Call list below is the part that needs you.`
+                    : "Emails wait for your approval on each card."}
                 </p>
               </div>
               <button className={data.autoSend ? "btn btn-xs btn-ghost" : "btn btn-xs"} onClick={toggleAuto}>
                 {data.autoSend ? "Switch to manual" : "Turn on hands-off"}
               </button>
             </div>
-            {data.noEmailCount > 0 && (
-              <p className="notice">
-                <b>{data.noEmailCount} prospects have no email</b> — those can't auto-send. They have a Facebook page instead: open the card, hit <b>FB</b>, and send a quick DM by hand (Facebook doesn't allow automated messages).
-              </p>
-            )}
 
             {data.paused?.on && (
               <div className="form-msg err" style={{ maxWidth: "none", display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                <span>⏸ SENDING PAUSED — {data.paused.reason}. Fix the bad addresses, then resume.</span>
-                <button className="btn btn-xs" onClick={resume}>Resume sending</button>
+                <span>⏸ SENDING PAUSED — {data.paused.reason}. Fix bad addresses, then resume.</span>
+                <button className="btn btn-xs" onClick={resume}>Resume</button>
               </div>
             )}
-            {!data.zoho && (
-              <p className="notice"><b>Zoho isn't connected yet</b> — set ZOHO_APP_PASSWORD to enable sending and reply tracking. Drafting and approving works meanwhile.</p>
-            )}
-            {!data.mailingAddressSet && (
-              <p className="notice"><b>MAILING_ADDRESS env var not set</b> — CAN-SPAM requires your physical address in the footer. Sends will include an empty line until it's set.</p>
-            )}
+            {!data.zoho && <p className="notice"><b>Zoho isn't connected</b> — set ZOHO_APP_PASSWORD to enable sending + reply tracking.</p>}
 
             <div className="tiles">
-              <div className="card tile"><span className="tile-n">{data.sentToday}<span style={{ fontSize: 16, color: "var(--mut)" }}>/{data.cap}</span></span><span className="tile-l">Sent today</span></div>
-              <div className="card tile"><span className="tile-n">{grouped.queued?.length ?? 0}</span><span className="tile-l">Queued</span></div>
+              <div className="card tile"><span className="tile-n">{grouped.calls?.length ?? 0}</span><span className="tile-l">To call</span></div>
+              <div className="card tile"><span className="tile-n">{data.sentToday}<span style={{ fontSize: 16, color: "var(--mut)" }}>/{data.cap}</span></span><span className="tile-l">Emailed today</span></div>
               <div className="card tile"><span className="tile-n">{grouped.replied?.length ?? 0}</span><span className="tile-l">Replies</span></div>
               <div className="card tile"><span className="tile-n">{bounceRate}%</span><span className="tile-l">Bounce rate</span></div>
             </div>
 
             <div className="rowactions" style={{ marginTop: 12 }}>
-              <button className="btn btn-xs btn-ghost" onClick={testSend} disabled={!data.zoho}>Send SMTP/IMAP test to hello@</button>
+              <button className="btn btn-xs btn-ghost" onClick={testSend} disabled={!data.zoho}>Send test to hello@</button>
               {testState && <span className="kv">{testState}</span>}
             </div>
             {data.lastTick && (
               <details style={{ marginTop: 10 }}>
-                <summary className="kv" style={{ cursor: "pointer" }}>Last tick: {new Date(data.lastTick.at).toLocaleString()}</summary>
+                <summary className="kv" style={{ cursor: "pointer" }}>Last run: {new Date(data.lastTick.at).toLocaleString()}</summary>
                 <p className="kv" style={{ whiteSpace: "pre-wrap" }}>{(data.lastTick.log || []).join("\n") || "(no actions)"}</p>
               </details>
             )}
@@ -261,12 +223,20 @@ export default function Outreach() {
               ))}
             </div>
 
+            {tab === "calls" && (
+              <p className="notice" style={{ marginBottom: 4 }}>
+                These businesses don't have an email address online, so they're a quick call instead. Tap the number to dial, use the best-time-to-call window, and pitch the offer listed. Mark them called when done.
+              </p>
+            )}
+
             {err && <p className="form-msg err">{err}</p>}
 
             <div className="stack">
-              {(grouped[tab] || []).map((p) => (
-                <ProspectCard key={p.id} p={p} emails={data.emails} onPatch={patchProspect} onDraft={draft} onEmailPatch={patchEmail} />
-              ))}
+              {(grouped[tab] || []).map((p) =>
+                tab === "calls"
+                  ? <CallCard key={p.id} p={p} onPatch={patchProspect} />
+                  : <EmailCard key={p.id} p={p} emails={data.emails} onPatch={patchProspect} />
+              )}
               {(grouped[tab] || []).length === 0 && <p className="notice">Nothing here right now.</p>}
             </div>
           </div>

@@ -21,7 +21,7 @@ create table if not exists prospects (
   status text not null default 'new'
     check (status in ('new','drafted','approved','sent','followup_drafted',
                       'followed_up','replied','opted_out','bounced',
-                      'no_response_call','not_a_fit')),
+                      'no_response_call','not_a_fit','called')),
   notes text not null default '',
   last_contacted timestamptz,
   followup_due date,
