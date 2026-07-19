@@ -63,13 +63,13 @@ export default async function Home() {
   return (
     <Shell theme="dark">
       <MapHero offers={offers.map(({ id, business_name, headline, retail_value, cash_bonus, lat, lng, status, spots_remaining, photo_url, category }) => ({ id, business_name, headline, retail_value, cash_bonus, lat, lng, status, spots_remaining, photo_url, category }))}>
-        <p className="kick" style={{ marginBottom: 8 }}>{SITE.city} pilot</p>
+        <p className="kick" style={{ marginBottom: 8 }}>Now in {SITE.city}</p>
         <h1>
-          {SITE.city}'s best spots. <span className="hl">Free.</span>
+          Get paid to do <span className="hl">what you love</span>.
         </h1>
         <p className="sub" style={{ marginTop: 10 }}>
-          Local restaurants, cafés &amp; rentals trade free meals, nights out and
-          boat days for a 30-second video.
+          Free meals, nights out and boat days — <b>plus cash</b> — for a 30-second
+          video. No followers, no agency, just your phone.
         </p>
         <Link className="hero-stat" href="/offers">
           {openCount > 0

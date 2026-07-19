@@ -27,15 +27,24 @@ const TABS = [
 
 export default function CreatorTabBar() {
   const pathname = usePathname();
-  const [signedIn, setSignedIn] = useState(false);
+  // Seed from a cached flag so the bar stays put across page navigations
+  // instead of blinking out while /api/creator/me re-fetches.
+  const [signedIn, setSignedIn] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("bagdit_signedin") === "1";
+  });
   const [active, setActive] = useState("");
 
   useEffect(() => {
     fetch("/api/creator/me")
       .then((r) => r.json())
-      .then((o) => setSignedIn(Boolean(o.creator)))
+      .then((o) => {
+        const yes = Boolean(o.creator);
+        setSignedIn(yes);
+        try { sessionStorage.setItem("bagdit_signedin", yes ? "1" : "0"); } catch {}
+      })
       .catch(() => {});
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname.startsWith("/offers")) setActive("offers");

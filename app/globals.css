@@ -62,13 +62,21 @@ img,svg{display:block;max-width:100%}
   padding-top:env(safe-area-inset-top); /* clear the phone status bar / notch */
 }
 .nav-in{max-width:1080px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.nav .logo{text-decoration:none;flex:none}
+.nav .logo{text-decoration:none;flex:none;display:flex;align-items:center}
 .nav .logo img{height:29px;width:auto}
-.nav-links{display:flex;gap:18px;font-size:13.5px;font-weight:700;overflow-x:auto}
+.nav .logo-mark{display:none}
+.nav-links{display:flex;gap:18px;font-size:13.5px;font-weight:700;min-width:0}
 .nav-links a{text-decoration:none;color:var(--mut);transition:color .15s ease;white-space:nowrap}
 .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--ink)}
 @media(min-width:720px){.nav-links{gap:26px;font-size:14.5px}}
-@media(max-width:560px){.nav .cta-nav{display:none}}
+/* phones: compact so all links fit without a horizontal scroll */
+@media(max-width:560px){
+  .nav-in{padding:12px 13px;gap:8px}
+  .nav .logo-full{display:none}
+  .nav .logo-mark{display:block;height:28px}
+  .nav-links{gap:13px;font-size:12.5px;flex:1;justify-content:center}
+  .nav .btn-sm{padding:9px 13px;font-size:12.5px}
+}
 
 /* ---------- buttons ---------- */
 .btn{
