@@ -103,6 +103,11 @@ function ProspectCard({ p, emails, onPatch, onDraft, onEmailPatch }) {
             {sent.length > 0 ? "Draft follow-up" : "Generate draft"}
           </button>
         )}
+        {["sent", "followed_up", "approved", "followup_drafted"].includes(p.status) && (
+          <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "replied" })}>
+            Mark replied (stops automation)
+          </button>
+        )}
         {p.status !== "not_a_fit" && (
           <button className="btn btn-xs btn-ghost" onClick={() => onPatch(p.id, { status: "not_a_fit" })}>Not a fit</button>
         )}
