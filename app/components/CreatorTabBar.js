@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const I = {
@@ -27,13 +27,13 @@ const TABS = [
 
 export default function CreatorTabBar() {
   const pathname = usePathname();
-  // Seed from a cached flag so the bar stays put across page navigations
+  const searchParams = useSearchParams();
+  // Seed from a cached flag so the bar stays put across navigations
   // instead of blinking out while /api/creator/me re-fetches.
   const [signedIn, setSignedIn] = useState(() => {
     if (typeof window === "undefined") return false;
     return sessionStorage.getItem("bagdit_signedin") === "1";
   });
-  const [active, setActive] = useState("");
 
   useEffect(() => {
     fetch("/api/creator/me")
@@ -46,12 +46,10 @@ export default function CreatorTabBar() {
       .catch(() => {});
   }, [pathname]);
 
-  useEffect(() => {
-    if (pathname.startsWith("/offers")) setActive("offers");
-    else if (pathname.startsWith("/account")) {
-      setActive(new URLSearchParams(window.location.search).get("tab") || "wallet");
-    } else setActive("");
-  }, [pathname]);
+  // Computed during render so it reacts to ?tab= changes, not just pathname.
+  let active = "";
+  if (pathname.startsWith("/offers")) active = "offers";
+  else if (pathname.startsWith("/account")) active = searchParams.get("tab") || "wallet";
 
   if (!signedIn) return null;
   return (

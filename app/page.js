@@ -18,35 +18,13 @@ const CATS = [
   { key: "activity", label: "Activities", img: "/photos/boat.jpg" },
 ];
 
-const BENEFITS = [
-  {
-    title: "Eat & do more for $0",
-    body: "Your tab comes back after approval — plus a cash bonus on top.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" /><path d="M8.5 12.5l2.3 2.3L15.5 10" />
-      </svg>
-    ),
-  },
-  {
-    title: "Support local spots",
-    body: "Real Bay City businesses trading spare capacity — not chains.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-      </svg>
-    ),
-  },
-  {
-    title: "No followers needed",
-    body: "Good 30-second footage is the only requirement. Phone camera counts.",
-    icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="3" y="7" width="13" height="11" rx="2.5" /><path d="M16 10.5l5-2.5v9l-5-2.5" />
-      </svg>
-    ),
-  },
-];
+function FlowArrow() {
+  return (
+    <svg className="flow-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
 
 export default async function Home() {
   let offers = [];
@@ -78,17 +56,29 @@ export default async function Home() {
         </Link>
       </MapHero>
 
-      <section style={{ paddingTop: 54, paddingBottom: 30 }}>
+      <section style={{ paddingTop: 46, paddingBottom: 24 }}>
         <div className="wrap">
-          <h2 className="sr">Why Bagdit</h2>
-          <div className="benefits">
-            {BENEFITS.map((b) => (
-              <div key={b.title} className="benefit reveal">
-                <span className="benefit-ico">{b.icon}</span>
-                <b>{b.title}</b>
-                <p>{b.body}</p>
+          <div className="flow reveal">
+            <div className="flow-step">
+              <div className="flow-icon photo"><img src="/photos/tacos.jpg" alt="" /></div>
+              <span className="fl-label">Go enjoy it</span>
+            </div>
+            <FlowArrow />
+            <div className="flow-step">
+              <div className="flow-icon blue">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="3" /><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none" />
+                </svg>
               </div>
-            ))}
+              <span className="fl-label">Film a 30s reel</span>
+            </div>
+            <FlowArrow />
+            <div className="flow-step">
+              <div className="flow-icon pay">
+                <span className="pay-amt">$0</span>
+              </div>
+              <span className="fl-label">+ cash back</span>
+            </div>
           </div>
         </div>
       </section>

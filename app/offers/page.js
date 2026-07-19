@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Shell from "../components/Shell";
 import OfferBoard from "./OfferBoard";
 import { OffersInstallCard } from "../components/Install";
@@ -48,7 +49,9 @@ export default async function OffersPage({ searchParams }) {
         </div>
       </section>
       <OffersInstallCard />
-      <CreatorTabBar />
+      <Suspense>
+        <CreatorTabBar />
+      </Suspense>
     </Shell>
   );
 }

@@ -29,29 +29,32 @@ export default function AccountApp() {
     if (me && !me.creator) router.replace("/join?next=/account?tab=wallet");
   }, [me, router]);
 
-  if (me === undefined || (me && !me.creator)) {
-    return <div className="shell theme-dark"><main><section><div className="wrap"><p className="sub">Loading…</p></div></section></main></div>;
-  }
-
-  const { creator, wallet, claims, submissions, withdrawals } = me;
+  const ready = me && me.creator;
+  const { creator, wallet, claims, submissions, withdrawals } = me || {};
 
   return (
     <div className="shell theme-dark">
       <main>
         <section style={{ paddingTop: 28, paddingBottom: 40 }}>
           <div className="wrap" style={{ maxWidth: 620 }}>
-            <div className="admin-head" style={{ marginTop: 0 }}>
-              <div>
-                <p className="kick" style={{ marginBottom: 4 }}>
-                  {tab === "wallet" ? "Wallet" : tab === "content" ? "Your content" : "Profile"}
-                </p>
-                <h1 style={{ fontSize: 28 }}>Hey, {creator.name.split(" ")[0]}</h1>
-              </div>
-            </div>
+            {!ready ? (
+              <p className="sub">Loading…</p>
+            ) : (
+              <>
+                <div className="admin-head" style={{ marginTop: 0 }}>
+                  <div>
+                    <p className="kick" style={{ marginBottom: 4 }}>
+                      {tab === "wallet" ? "Wallet" : tab === "content" ? "Your content" : "Profile"}
+                    </p>
+                    <h1 style={{ fontSize: 28 }}>Hey, {creator.name.split(" ")[0]}</h1>
+                  </div>
+                </div>
 
-            {tab === "wallet" && <WalletTab wallet={wallet} submissions={submissions} withdrawals={withdrawals} creator={creator} onDone={load} />}
-            {tab === "content" && <ContentTab claims={claims} submissions={submissions} onDone={load} />}
-            {tab === "profile" && <ProfileTab creator={creator} onDone={load} router={router} />}
+                {tab === "wallet" && <WalletTab wallet={wallet} submissions={submissions} withdrawals={withdrawals} creator={creator} onDone={load} />}
+                {tab === "content" && <ContentTab claims={claims} submissions={submissions} onDone={load} />}
+                {tab === "profile" && <ProfileTab creator={creator} onDone={load} router={router} />}
+              </>
+            )}
           </div>
         </section>
       </main>

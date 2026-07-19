@@ -340,13 +340,22 @@ footer .socials{display:flex;gap:14px;margin-top:8px}
 .map-pop .mp-price .ex{color:#7E92B8;font-weight:700}
 .map-pop .mp-dist{font-size:11.5px;font-weight:700;color:#7E92B8}
 
-/* ---------- why bagdit ---------- */
-.benefits{display:grid;gap:14px}
-@media(min-width:720px){.benefits{grid-template-columns:repeat(3,1fr);gap:20px}}
-.benefit{display:grid;gap:6px;justify-items:start}
-.benefit-ico{color:var(--blue-bright);background:var(--blue-tint);border-radius:11px;padding:9px;display:flex}
-.benefit b{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
-.benefit p{font-size:14px;color:var(--mut);font-weight:500}
+/* ---------- how-it-earns flow ---------- */
+.flow{display:flex;align-items:flex-start;justify-content:center;gap:6px;max-width:400px;margin:0 auto}
+.flow-step{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;min-width:0}
+.flow-icon{
+  width:76px;height:76px;border-radius:22px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 24px rgba(0,0,0,.32);
+}
+@media(max-width:400px){.flow-icon{width:66px;height:66px;border-radius:19px}}
+.flow-icon.photo{overflow:hidden;border:1px solid var(--line)}
+.flow-icon.photo img{width:100%;height:100%;object-fit:cover}
+.flow-icon.blue{background:var(--blue);color:#fff}
+.flow-icon.pay{background:var(--blue-tint);color:var(--accent)}
+.flow-icon .pay-amt{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.fl-label{font-size:12.5px;font-weight:800;text-align:center;letter-spacing:-.01em;color:var(--ink)}
+.flow-arrow{color:var(--mut);flex:none;margin-top:28px}
+@media(max-width:400px){.flow-arrow{margin-top:23px;width:16px}}
 
 /* ---------- category grid ---------- */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
