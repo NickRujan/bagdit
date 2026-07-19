@@ -77,38 +77,41 @@ export default function SubmitForm({ offers, creator, myClaims, preselect }) {
 
       <div className="field">
         <label htmlFor="sf-offer">Which deal is this for?</label>
-        <select
-          id="sf-offer"
-          name="offer_pick"
-          required
-          value={offerChoice}
-          onChange={(e) => setOfferChoice(e.target.value)}
-        >
-          <option value="" disabled>Choose…</option>
-          {myClaims.length > 0 && (
-            <optgroup label="Your active claims">
-              {myClaims.map((c) => (
-                <option key={c.id} value={`claim:${c.id}`}>{c.label}</option>
-              ))}
-            </optgroup>
-          )}
-          {myClaims.length === 0 &&
-            offers.map((o) => (
-              <option key={o.id} value={o.label}>{o.label}</option>
-            ))}
-          <option value="__other__">Something else / not listed</option>
-        </select>
+        {creator && myClaims.length === 0 ? (
+          <p className="hint">
+            You haven't claimed an offer yet. <Link href="/offers"><b>Claim one first →</b></Link>
+          </p>
+        ) : (
+          <select
+            id="sf-offer"
+            name="offer_pick"
+            required
+            value={offerChoice}
+            onChange={(e) => setOfferChoice(e.target.value)}
+          >
+            <option value="" disabled>Choose…</option>
+            {myClaims.length > 0
+              ? myClaims.map((c) => (
+                  <option key={c.id} value={`claim:${c.id}`}>{c.label}</option>
+                ))
+              : offers.map((o) => (
+                  <option key={o.id} value={o.label}>{o.label}</option>
+                ))}
+          </select>
+        )}
       </div>
-      {offerChoice === "__other__" && (
-        <div className="field">
-          <label htmlFor="sf-other">Tell us which deal</label>
-          <input id="sf-other" name="offer_other" placeholder="Business + what the deal was" required />
-        </div>
-      )}
       <div className="field">
         <label htmlFor="sf-video">Video link</label>
         <input id="sf-video" name="video_url" type="url" required placeholder="https://drive.google.com/…" inputMode="url" />
-        <span className="hint">Google Drive, Dropbox, private YouTube/TikTok — anything we can open.</span>
+        <span className="hint">A private upload (Google Drive, Dropbox) or your posted reel — anything we can open.</span>
+      </div>
+      <div className="field">
+        <label htmlFor="sf-post">Posted it to your own account? <span className="hint">(only if the brief asked you to post it — paste the public link)</span></label>
+        <input id="sf-post" name="social_post_url" type="url" placeholder="https://instagram.com/reel/… or tiktok.com/@you/…" inputMode="url" />
+      </div>
+      <div className="field">
+        <label htmlFor="sf-socials">Your socials <span className="hint">(optional — helps brands that want a poster)</span></label>
+        <input id="sf-socials" name="social_handles" placeholder="@you on Instagram / TikTok" defaultValue={creator?.social_handle || ""} />
       </div>
       <div className="field">
         <label htmlFor="sf-receipt">Receipt photo</label>

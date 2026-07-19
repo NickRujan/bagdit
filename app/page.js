@@ -70,13 +70,10 @@ export default async function Home() {
           Local restaurants, cafés &amp; rentals trade free meals, nights out and
           boat days for a 30-second video.
         </p>
-        <p className="hero-stat" role="status">
+        <Link className="hero-stat" href="/offers">
           {openCount > 0
-            ? `${openCount} offer${openCount === 1 ? "" : "s"} live near you`
-            : "New offers drop every week"}
-        </p>
-        <Link className="btn" href="/offers" style={{ marginTop: 6 }}>
-          See what's near you
+            ? `${openCount} offer${openCount === 1 ? "" : "s"} live near you — browse offers →`
+            : "Browse offers →"}
         </Link>
       </MapHero>
 
@@ -141,7 +138,7 @@ export default async function Home() {
               Meals, stays, boat days — free, plus cash bonuses. No follower count
               required: good footage is the whole job.
             </p>
-            <Link className="btn" href="/offers">Browse offers</Link>
+            <Link className="btn" href="/join">Sign up to start</Link>
           </div>
           <div className="card door reveal d1">
             <p className="kick">For businesses</p>

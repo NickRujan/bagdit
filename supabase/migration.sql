@@ -60,6 +60,8 @@ create table if not exists submissions (
   name text not null,
   email text not null,
   video_url text not null,
+  social_post_url text not null default '',   -- public post link, for posting deals
+  social_handles text not null default '',    -- creator's socials (optional)
   receipt_path text not null default '',
   receipt_total text not null default '',
   payout_method text not null default '',

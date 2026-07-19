@@ -205,8 +205,12 @@ export default function Admin() {
                     <span className="kv"><b>{s.offer_text}</b></span>
                     <span className="kv">{s.email} · submitted {fmt(s.created_at)}</span>
                     <span className="kv">Receipt <b>{s.receipt_total}</b> · payout <b>{s.payout_method} → {s.payout_handle}</b></span>
+                    {s.social_handles && <span className="kv">Socials: <b>{s.social_handles}</b></span>}
                     <div className="rowactions">
                       <a className="btn btn-xs" href={s.video_url} target="_blank" rel="noopener noreferrer">Watch video</a>
+                      {s.social_post_url && (
+                        <a className="btn btn-xs btn-ghost" href={s.social_post_url} target="_blank" rel="noopener noreferrer">Public post</a>
+                      )}
                       {s.receipt_path && (
                         <a className="btn btn-xs btn-ghost" href={`/api/admin/receipt?path=${encodeURIComponent(s.receipt_path)}`} target="_blank" rel="noopener noreferrer">
                           View receipt

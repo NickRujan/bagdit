@@ -42,8 +42,14 @@ export default async function SubmitPage({ searchParams }) {
         email: creator.email,
         payout_method: creator.payout_method || "",
         payout_handle: creator.payout_handle || "",
+        social_handle: creator.social_handle || "",
       }
     : null;
+
+  // Only OPEN offers can be picked by a guest — you can't submit against a
+  // fully bagged offer you never claimed. (A creator's own claims still count,
+  // since claiming holds their spot.)
+  const openOffers = offers.filter((o) => o.status === "open" && o.spots_remaining > 0);
 
   return (
     <Shell theme="dark">
@@ -61,7 +67,7 @@ export default async function SubmitPage({ searchParams }) {
       <section style={{ paddingTop: 0, paddingBottom: 84 }}>
         <div className="wrap grid2" style={{ alignItems: "start" }}>
           <SubmitForm
-            offers={offers.map((o) => ({ id: o.id, label: `${o.business_name} — ${o.headline}`, cap: parseCap(o.retail_value) }))}
+            offers={openOffers.map((o) => ({ id: o.id, label: `${o.business_name} — ${o.headline}`, cap: parseCap(o.retail_value) }))}
             creator={safeCreator}
             myClaims={myClaims}
             preselect={preselect || ""}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Shell from "../../components/Shell";
 import ClaimButton from "./ClaimButton";
 import DistanceLine from "./DistanceLine";
+import DetailMap from "./DetailMap";
 import { getOffer, CLAIM_DAYS } from "../../../lib/db";
 import { CATEGORIES } from "../../../lib/config";
 import { artFor } from "../../../lib/geo";
@@ -28,9 +29,6 @@ export default async function OfferDetail({ params }) {
   const cat = CATEGORIES.find((c) => c.key === offer.category)?.label || offer.category;
   const briefSummary = (offer.brief || offer.the_ask || "").split(/(?<=\.)\s+/).slice(0, 3).join(" ");
   const hasMap = offer.lat && offer.lng;
-  const bbox = hasMap
-    ? [offer.lng - 0.012, offer.lat - 0.007, offer.lng + 0.012, offer.lat + 0.007].join("%2C")
-    : null;
 
   return (
     <Shell theme="dark">
@@ -83,12 +81,7 @@ export default async function OfferDetail({ params }) {
             <div className="card" style={{ padding: 0, overflow: "hidden" }}>
               {hasMap ? (
                 <>
-                  <iframe
-                    className="map-embed"
-                    title={`Map to ${offer.business_name}`}
-                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${offer.lat}%2C${offer.lng}`}
-                    loading="lazy"
-                  />
+                  <DetailMap lat={offer.lat} lng={offer.lng} open={!done} />
                   <div style={{ padding: "14px 18px 18px" }}>
                     <p className="kv"><b>{offer.business_name}</b><br />{offer.address}</p>
                     <a

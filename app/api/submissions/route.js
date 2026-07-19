@@ -30,14 +30,20 @@ export async function POST(req) {
       } else {
         offer_text = "Claimed offer (not found)";
       }
-    } else if (pick === "__other__") {
-      offer_text = String(fd.get("offer_other") || "").trim().slice(0, 300);
     } else {
-      offer_text = pick.slice(0, 300);
+      // Guest picking an offer by label — must be an OPEN one (can't submit
+      // against an offer that's already fully bagged).
       const match = (await listOffers({ sweep: false })).find(
         (o) => `${o.business_name} — ${o.headline}` === pick
       );
-      cap = match ? parseCap(match.retail_value) : null;
+      if (!match) {
+        return NextResponse.json({ error: "pick an offer from the list" }, { status: 400 });
+      }
+      if (match.status !== "open" || match.spots_remaining <= 0) {
+        return NextResponse.json({ error: "that offer is fully bagged — nothing to submit for it" }, { status: 409 });
+      }
+      offer_text = pick.slice(0, 300);
+      cap = parseCap(match.retail_value);
     }
 
     if (!name || !EMAIL_RE.test(email) || !video_url || !offer_text) {
@@ -64,12 +70,17 @@ export async function POST(req) {
       return NextResponse.json({ error: String(err.message) }, { status: 400 });
     }
 
+    const social_post_url = String(fd.get("social_post_url") || "").trim().slice(0, 500);
+    const social_handles = String(fd.get("social_handles") || "").trim().slice(0, 200);
+
     const sub = await createSubmission({
       claim_id,
       offer_text,
       name,
       email,
       video_url,
+      social_post_url,
+      social_handles,
       receipt_path,
       receipt_total: String(fd.get("receipt_total") || "").trim().slice(0, 40),
       payout_method: String(fd.get("payout_method") || "").trim().slice(0, 40),
@@ -81,12 +92,14 @@ export async function POST(req) {
       `Name: ${sub.name}`,
       `Email: ${sub.email}`,
       `Video: ${sub.video_url}`,
+      social_post_url ? `Posted publicly: ${social_post_url}` : null,
+      social_handles ? `Socials: ${social_handles}` : null,
       `Receipt total: ${sub.receipt_total}`,
       `Payout: ${sub.payout_method} → ${sub.payout_handle}`,
       ``,
       `Next: review the video, then mark sent_to_business in /admin.`,
       `Admin: https://bagdit.app/admin`,
-    ]);
+    ].filter(Boolean));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("submission error:", err);

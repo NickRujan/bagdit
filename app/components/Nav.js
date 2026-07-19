@@ -35,15 +35,9 @@ export default function Nav({ theme = "light" }) {
               {l.label}
             </Link>
           ))}
-          <Link
-            href={signedIn ? "/account" : "/join"}
-            aria-current={pathname === "/account" || pathname === "/join" ? "page" : undefined}
-          >
-            {signedIn ? "Account" : "Join"}
-          </Link>
         </div>
-        <Link className="btn btn-sm cta-nav" href="/offers">
-          Claim an offer
+        <Link className="btn btn-sm" href={signedIn ? "/account" : "/join"} style={{ flex: "none" }}>
+          {signedIn ? "Account" : "Log in"}
         </Link>
       </div>
     </nav>
