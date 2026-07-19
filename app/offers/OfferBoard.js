@@ -41,8 +41,10 @@ export function useVisitorLocation() {
   return loc;
 }
 
-export default function OfferBoard({ offers }) {
-  const [cat, setCat] = useState("all");
+export default function OfferBoard({ offers, initialCat = "all" }) {
+  const [cat, setCat] = useState(
+    CATEGORIES.some((c) => c.key === initialCat) ? initialCat : "all"
+  );
   const loc = useVisitorLocation();
 
   const withDist = offers.map((o) => ({

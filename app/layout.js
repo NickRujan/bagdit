@@ -1,3 +1,5 @@
+import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster/dist/MarkerCluster.css";
 import "./globals.css";
 import Effects from "./components/Effects";
 import { SITE } from "../lib/config";

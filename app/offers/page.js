@@ -11,7 +11,8 @@ export const metadata = {
     "Free meals, stays, and activities in exchange for a 30–60 second video. Claim a spot — you'll hear back within 24 hours.",
 };
 
-export default async function OffersPage() {
+export default async function OffersPage({ searchParams }) {
+  const { cat } = await searchParams;
   let offers = [];
   let dbDown = false;
   try {
@@ -40,7 +41,7 @@ export default async function OffersPage() {
               email {SITE.email} and we'll send you today's offers directly.
             </p>
           ) : (
-            <OfferBoard offers={offers} />
+            <OfferBoard offers={offers} initialCat={cat || "all"} />
           )}
         </div>
       </section>
