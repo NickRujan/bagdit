@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
+    "imapflow": "^1.4.7",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
     "next": "^15.5.0",
+    "nodemailer": "^9.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resend": "^4.0.1"

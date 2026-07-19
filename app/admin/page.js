@@ -141,6 +141,7 @@ export default function Admin() {
               </div>
               <div className="rowactions">
                 {!data.supabase && <span className="pill warn">local demo data</span>}
+                <a className="btn btn-xs" href="/admin/outreach">Outreach →</a>
                 <a className="btn btn-xs btn-ghost" href={`/api/admin/export?table=${tab}`}>Export {tab} CSV</a>
                 <button className="btn btn-xs btn-ghost" onClick={load}>Refresh</button>
               </div>

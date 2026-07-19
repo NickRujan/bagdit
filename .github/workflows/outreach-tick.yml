@@ -1,0 +1,20 @@
+# Outreach heartbeat: pings the tick endpoint every 30 minutes.
+# The endpoint enforces ALL rules server-side (send window, daily cap,
+# spacing, approvals, opt-outs) — this workflow only wakes it up.
+#
+# Setup (one time): GitHub repo → Settings → Secrets and variables →
+# Actions → New repository secret → name OUTREACH_CRON_SECRET, value =
+# the same string as the Vercel env var of that name.
+name: outreach-tick
+on:
+  schedule:
+    - cron: "*/30 12-21 * * 1-5" # every 30 min, 8am–5pm ET (12–21 UTC), weekdays
+  workflow_dispatch: {}
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping tick endpoint
+        run: |
+          curl -sS --max-time 90 "https://bagdit.app/api/outreach-tick?key=${{ secrets.OUTREACH_CRON_SECRET }}"
