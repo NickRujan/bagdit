@@ -11,13 +11,11 @@ export const metadata = {
   openGraph: { images: ["/og/og-home.png"] },
 };
 
-const VENUES = [
-  { label: "Food", img: "/photos/tacos.jpg", cat: "food" },
-  { label: "Coffee", img: "/photos/coffee.jpg", cat: "food" },
-  { label: "Nightlife", img: "/photos/brewery.jpg", cat: "nightlife" },
-  { label: "Stays", img: "/photos/motel.jpg", cat: "stay" },
-  { label: "On the water", img: "/photos/boat.jpg", cat: "activity" },
-  { label: "Activities", img: "/photos/cat-activity.jpg", cat: "activity" },
+const CATS = [
+  { key: "food", label: "Food & drink", img: "/photos/tacos.jpg" },
+  { key: "nightlife", label: "Nightlife", img: "/photos/brewery.jpg" },
+  { key: "stay", label: "Stays", img: "/photos/motel.jpg" },
+  { key: "activity", label: "Activities", img: "/photos/boat.jpg" },
 ];
 
 const BENEFITS = [
@@ -57,7 +55,10 @@ export default async function Home() {
   } catch {
     // map renders empty; stat line falls back to the honest no-number line
   }
-  const openCount = offers.filter((o) => o.status === "open" && o.spots_remaining > 0).length;
+  const liveOffers = offers.filter((o) => o.status === "open" && o.spots_remaining > 0);
+  const openCount = liveOffers.length;
+  const countByCat = {};
+  for (const o of liveOffers) countByCat[o.category] = (countByCat[o.category] || 0) + 1;
 
   return (
     <Shell theme="dark">
@@ -94,15 +95,20 @@ export default async function Home() {
 
       <section style={{ paddingTop: 20, paddingBottom: 10 }}>
         <div className="wrap">
-          <h2 style={{ fontSize: "clamp(22px,4.5vw,30px)" }}>From taquerias to pontoons</h2>
-        </div>
-        <div className="venue-strip" role="list">
-          {VENUES.map((v) => (
-            <Link key={v.label} href={`/offers?cat=${v.cat}`} className="venue-tile" role="listitem">
-              <img src={v.img} alt="" loading="lazy" />
-              <span>{v.label}</span>
-            </Link>
-          ))}
+          <h2 style={{ fontSize: "clamp(22px,4.5vw,30px)" }}>Browse the board</h2>
+          <div className="cat-grid">
+            {CATS.map((c) => (
+              <Link key={c.key} href={`/offers?cat=${c.key}`} className="cat-tile">
+                <img src={c.img} alt="" loading="lazy" />
+                <div className="cat-meta">
+                  <span className={countByCat[c.key] ? "cat-count" : "cat-count none"}>
+                    {countByCat[c.key] ? `${countByCat[c.key]} live` : "Coming soon"}
+                  </span>
+                  <span className="cat-label">{c.label}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

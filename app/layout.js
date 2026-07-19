@@ -18,7 +18,7 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     title: "Bagdit",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "black", // opaque bar — content starts below it, so the nav stays tappable
   },
   icons: {
     icon: [

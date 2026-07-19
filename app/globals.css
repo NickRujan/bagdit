@@ -59,6 +59,7 @@ img,svg{display:block;max-width:100%}
   background:color-mix(in srgb, var(--bg) 84%, transparent);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
+  padding-top:env(safe-area-inset-top); /* clear the phone status bar / notch */
 }
 .nav-in{max-width:1080px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .nav .logo{text-decoration:none;flex:none}
@@ -339,26 +340,26 @@ footer .socials{display:flex;gap:14px;margin-top:8px}
 .benefit b{font-size:16.5px;font-weight:800;letter-spacing:-.01em}
 .benefit p{font-size:14px;color:var(--mut);font-weight:500}
 
-/* ---------- venue strip ---------- */
-.venue-strip{
-  display:flex;gap:12px;overflow-x:auto;padding:18px 20px 8px;
-  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-  max-width:1080px;margin:0 auto;scrollbar-width:none;
-}
-.venue-strip::-webkit-scrollbar{display:none}
-.venue-tile{
-  flex:0 0 150px;height:200px;scroll-snap-align:start;position:relative;
-  border-radius:13px;overflow:hidden;
+/* ---------- category grid ---------- */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+@media(min-width:640px){.cat-grid{grid-template-columns:repeat(4,1fr)}}
+.cat-tile{
+  position:relative;aspect-ratio:5/4;border-radius:16px;overflow:hidden;
   text-decoration:none;border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(0,0,0,.28);
+  transition:transform .2s ease;
 }
-.venue-tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
-.venue-tile:hover img{transform:scale(1.05)}
-.venue-tile span{
-  position:absolute;left:0;right:0;bottom:0;padding:26px 12px 11px;
-  font-size:14px;font-weight:800;color:#fff;
-  background:linear-gradient(to top, rgba(7,15,34,.9), transparent);
+.cat-tile:hover{transform:translateY(-3px)}
+.cat-tile img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.cat-tile:hover img{transform:scale(1.06)}
+.cat-meta{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
+  gap:6px;padding:14px;
+  background:linear-gradient(to top, rgba(7,15,34,.94) 6%, rgba(7,15,34,.15) 55%, transparent);
 }
-@media(min-width:760px){.venue-tile{flex-basis:180px;height:230px}}
+.cat-label{color:#fff;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.cat-count{align-self:flex-start;font-size:11px;font-weight:800;color:#fff;background:var(--blue);border-radius:99px;padding:3px 10px}
+.cat-count.none{background:rgba(255,255,255,.16);color:rgba(255,255,255,.85)}
 
 /* ---------- creator bottom tab bar ---------- */
 .tabbar-spacer{height:calc(64px + env(safe-area-inset-bottom))}
